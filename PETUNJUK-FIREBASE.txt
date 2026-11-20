@@ -1,0 +1,55 @@
+PANDUAN SETUP WEBSITE PROGRAM KERJA
+===================================
+
+A. MODE DEMO
+- Buka index.html di browser.
+- Admin: admin@demo.local / admin123
+- Pengurus: Ahmad Fauzi / 123456
+- Data demo tersimpan di localStorage browser/perangkat ini saja.
+- Mode demo bukan database bersama dan bukan untuk penggunaan organisasi sebenarnya.
+
+B. MEMBUAT FIREBASE BARU
+1. Buat project baru di https://console.firebase.google.com/ khusus Program Kerja.
+2. Tambahkan aplikasi Web (ikon </>) dan salin konfigurasi Firebase.
+3. Buka index.html, cari konstanta FIREBASE_CONFIG, lalu ganti semua nilai GANTI_... dengan konfigurasi project baru.
+4. Firebase Console > Authentication > Sign-in method: aktifkan Email/Password.
+5. Firebase Console > Firestore Database: buat database.
+6. Salin isi file firestore.rules ke tab Firestore Database > Rules, lalu Publish.
+7. Authentication > Settings > Authorized domains: tambahkan domain website GitHub Pages Anda.
+
+C. MEMBUAT AKUN ADMIN PERTAMA
+1. Firebase Console > Authentication > Users > Add user.
+2. Buat email dan password admin.
+3. Salin UID akun tersebut.
+4. Firestore > Data: buat koleksi users, lalu dokumen dengan Document ID persis UID tadi.
+5. Isi field:
+   role  (string) = admin
+   nama  (string) = Administrator
+6. Login dari website menggunakan email dan password tersebut.
+
+D. MEMBUAT AKUN PENGURUS
+1. Login sebagai admin ke website.
+2. Buka Database Pengurus > Tambah Pengurus. Isi nama, bidang, jabatan, dan nama login unik.
+3. Nama login diubah menjadi format email internal: namalogin@akun.programkerja.app
+   Contoh: ahmad.fauzi@akun.programkerja.app
+4. Firebase Console > Authentication > Users > Add user. Gunakan email internal tersebut dan buat password sementara.
+5. Salin UID akun pengurus yang baru dibuat.
+6. Firestore > koleksi users > Add document dengan Document ID = UID pengurus.
+7. Isi field:
+   role        (string) = pengurus
+   nama        (string) = nama pengurus
+   pengurusId  (string) = ID dokumen pengurus dari koleksi pengurus
+8. Pengurus login dengan nama login yang dibuat di langkah 2 dan password dari langkah 4.
+
+CATATAN KEAMANAN
+- Password tidak disimpan di Firestore.
+- Pembuatan akun Authentication pengurus pada versi awal ini dilakukan melalui Firebase Console.
+  Jangan menambahkan fitur pembuatan akun admin/pengurus langsung di browser menggunakan kredensial admin.
+- Pengurus hanya dapat membaca program dengan penanggungJawabId yang sama dengan pengurusId di profilnya.
+- Usulan pengurus hanya dapat dibaca oleh pengusul dan admin. Keputusan usulan hanya dapat dilakukan admin.
+- File Rules ini adalah baseline untuk struktur koleksi yang dipakai oleh index.html. Uji dengan akun admin dan dua akun pengurus berbeda sebelum digunakan pada data resmi.
+
+BATASAN VERSI AWAL
+- Form program kerja, RAB, usulan, persetujuan/revisi/penolakan, database pengurus, dashboard, dan ringkasan anggaran sudah disiapkan.
+- Upload foto/dokumen bukti kegiatan dan realisasi anggaran rinci belum diaktifkan pada versi awal ini.
+- Mode demo menyimpan perubahan secara lokal. Data baru akan tersinkron lintas perangkat setelah konfigurasi Firebase dan akun selesai dibuat.
