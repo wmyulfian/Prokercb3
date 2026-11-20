@@ -1,55 +1,132 @@
-PANDUAN SETUP WEBSITE PROGRAM KERJA
-===================================
+PANDUAN SETUP FIREBASE — PROGRAM KERJA CB3
+==========================================
 
-A. MODE DEMO
-- Buka index.html di browser.
-- Admin: admin@demo.local / admin123
-- Pengurus: Ahmad Fauzi / 123456
-- Data demo tersimpan di localStorage browser/perangkat ini saja.
-- Mode demo bukan database bersama dan bukan untuk penggunaan organisasi sebenarnya.
+PROJECT FIREBASE
+- Project ID: database-gencita
+- Auth domain: database-gencita.firebaseapp.com
+- Web App sudah dimasukkan ke index.html.
+- Firebase SDK pada index.html menggunakan compat 10.14.1.
+- Halaman memakai Firebase Authentication dan Cloud Firestore.
+- Google Analytics belum digunakan oleh kode aplikasi; measurementId hanya tersimpan di konfigurasi.
 
-B. MEMBUAT FIREBASE BARU
-1. Buat project baru di https://console.firebase.google.com/ khusus Program Kerja.
-2. Tambahkan aplikasi Web (ikon </>) dan salin konfigurasi Firebase.
-3. Buka index.html, cari konstanta FIREBASE_CONFIG, lalu ganti semua nilai GANTI_... dengan konfigurasi project baru.
-4. Firebase Console > Authentication > Sign-in method: aktifkan Email/Password.
-5. Firebase Console > Firestore Database: buat database.
-6. Salin isi file firestore.rules ke tab Firestore Database > Rules, lalu Publish.
-7. Authentication > Settings > Authorized domains: tambahkan domain website GitHub Pages Anda.
+1. AKTIFKAN FIREBASE AUTHENTICATION
+-----------------------------------
+1. Buka https://console.firebase.google.com/
+2. Pilih project database-gencita.
+3. Buka Build > Authentication.
+4. Klik Get started (jika belum pernah diaktifkan).
+5. Buka Sign-in method.
+6. Pilih Email/Password, aktifkan Email/Password, lalu Save.
 
-C. MEMBUAT AKUN ADMIN PERTAMA
-1. Firebase Console > Authentication > Users > Add user.
-2. Buat email dan password admin.
-3. Salin UID akun tersebut.
-4. Firestore > Data: buat koleksi users, lalu dokumen dengan Document ID persis UID tadi.
-5. Isi field:
-   role  (string) = admin
-   nama  (string) = Administrator
-6. Login dari website menggunakan email dan password tersebut.
+2. TAMBAHKAN DOMAIN YANG DIPAKAI
+--------------------------------
+1. Di Authentication, buka Settings > Authorized domains.
+2. Tambahkan host berikut satu per satu jika belum ada:
+   - www.cb3.web.id
+   - pages.cb3.web.id
+   - prokercb3.vercel.app
+   - wmyulfian.github.io
+3. Jangan menambahkan https:// atau path; masukkan nama host saja.
+4. Domain database-gencita.firebaseapp.com biasanya sudah terdaftar otomatis.
 
-D. MEMBUAT AKUN PENGURUS
-1. Login sebagai admin ke website.
-2. Buka Database Pengurus > Tambah Pengurus. Isi nama, bidang, jabatan, dan nama login unik.
-3. Nama login diubah menjadi format email internal: namalogin@akun.programkerja.app
+Catatan: gunakan domain yang benar-benar dipakai. Jika alamat Vercel berubah, tambahkan hostname Vercel terbaru.
+
+3. BUAT CLOUD FIRESTORE
+-----------------------
+1. Buka Build > Firestore Database.
+2. Klik Create database jika database belum dibuat.
+3. Pilih Production mode.
+4. Pilih lokasi asia-southeast2 (Jakarta) bila database memang belum dibuat.
+5. Selesaikan pembuatan database.
+
+PENTING: Lokasi Firestore tidak dapat diubah setelah database dibuat. Jika database sudah ada, jangan membuat database kedua hanya untuk mengikuti petunjuk ini; periksa lokasi yang sudah dipilih.
+
+4. TERAPKAN FIRESTORE SECURITY RULES
+------------------------------------
+1. Buka Firestore Database > Rules.
+2. Buka file firestore.rules di paket ini.
+3. Salin seluruh isinya ke editor Rules Firebase.
+4. Klik Publish.
+
+Ringkasan aturan:
+- Admin dapat membaca dan mengelola seluruh program, usulan, dan data pengurus.
+- Pengurus hanya dapat membaca program dengan penanggungJawabId yang sama dengan pengurusId pada profilnya.
+- Pengurus hanya dapat membaca usulan miliknya sendiri dan dapat membuat usulan baru.
+- Hanya admin yang dapat menyetujui, merevisi, menolak, atau menghapus usulan.
+- Profil users hanya dapat dibaca oleh pemilik akun; pembuatan profil awal dilakukan melalui Firebase Console.
+
+5. BUAT AKUN ADMIN PERTAMA
+--------------------------
+A. Firebase Authentication:
+1. Buka Authentication > Users.
+2. Klik Add user.
+3. Masukkan email admin yang benar-benar Anda miliki dan password yang kuat.
+4. Simpan, lalu salin UID akun yang dibuat.
+
+B. Cloud Firestore:
+1. Buka Firestore Database > Data.
+2. Buat collection dengan ID: users
+3. Buat document dengan Document ID persis sama dengan UID akun admin tadi.
+4. Tambahkan field berikut:
+   role  | string | admin
+   nama  | string | Administrator
+5. Simpan.
+
+Setelah itu, buka website dan login melalui tab Admin menggunakan email dan password tersebut.
+
+6. BUAT AKUN PENGURUS
+---------------------
+A. Buat data pengurus melalui website:
+1. Login sebagai admin.
+2. Buka Database Pengurus > Tambah Pengurus.
+3. Masukkan nama, jabatan, bidang, serta nama login unik.
+4. Simpan.
+5. Buka Firestore > collection pengurus dan catat Document ID dari data pengurus yang baru dibuat. ID ini disebut pengurusId.
+
+B. Buat akun autentikasi pengurus:
+1. Buka Authentication > Users > Add user.
+2. Gunakan email internal berdasarkan nama login:
+   namalogin@akun.programkerja.app
    Contoh: ahmad.fauzi@akun.programkerja.app
-4. Firebase Console > Authentication > Users > Add user. Gunakan email internal tersebut dan buat password sementara.
-5. Salin UID akun pengurus yang baru dibuat.
-6. Firestore > koleksi users > Add document dengan Document ID = UID pengurus.
-7. Isi field:
-   role        (string) = pengurus
-   nama        (string) = nama pengurus
-   pengurusId  (string) = ID dokumen pengurus dari koleksi pengurus
-8. Pengurus login dengan nama login yang dibuat di langkah 2 dan password dari langkah 4.
+3. Buat password sementara yang diberikan secara aman kepada pengurus.
+4. Simpan dan salin UID akun tersebut.
 
-CATATAN KEAMANAN
+C. Buat profil Firestore:
+1. Buka Firestore > collection users.
+2. Buat document dengan Document ID persis sama dengan UID akun pengurus tadi.
+3. Tambahkan field:
+   role        | string | pengurus
+   nama        | string | Nama Pengurus
+   pengurusId  | string | ID dokumen dari collection pengurus
+4. Simpan.
+
+Pengurus login melalui tab Pengurus dengan mengetik nama login (bukan email internal) dan password yang dibuat di Authentication.
+
+CATATAN PENTING LOGIN PENGURUS
+- Nama login diubah oleh aplikasi menjadi slug huruf kecil dan tanda titik, lalu ditambahkan @akun.programkerja.app.
+- Contoh nama login Ahmad Fauzi: ahmad.fauzi
+- Email internalnya: ahmad.fauzi@akun.programkerja.app
+- Email internal ini hanya identitas login Firebase, bukan alamat email untuk menerima surat.
 - Password tidak disimpan di Firestore.
-- Pembuatan akun Authentication pengurus pada versi awal ini dilakukan melalui Firebase Console.
-  Jangan menambahkan fitur pembuatan akun admin/pengurus langsung di browser menggunakan kredensial admin.
-- Pengurus hanya dapat membaca program dengan penanggungJawabId yang sama dengan pengurusId di profilnya.
-- Usulan pengurus hanya dapat dibaca oleh pengusul dan admin. Keputusan usulan hanya dapat dilakukan admin.
-- File Rules ini adalah baseline untuk struktur koleksi yang dipakai oleh index.html. Uji dengan akun admin dan dua akun pengurus berbeda sebelum digunakan pada data resmi.
+- Pembuatan akun Authentication pengurus pada versi awal ini dilakukan melalui Firebase Console, bukan dari browser.
 
-BATASAN VERSI AWAL
-- Form program kerja, RAB, usulan, persetujuan/revisi/penolakan, database pengurus, dashboard, dan ringkasan anggaran sudah disiapkan.
-- Upload foto/dokumen bukti kegiatan dan realisasi anggaran rinci belum diaktifkan pada versi awal ini.
-- Mode demo menyimpan perubahan secara lokal. Data baru akan tersinkron lintas perangkat setelah konfigurasi Firebase dan akun selesai dibuat.
+7. UJI COBA SEBELUM DIGUNAKAN
+-----------------------------
+1. Login admin, pastikan dashboard memuat tanpa error permission.
+2. Buat satu data pengurus melalui menu Database Pengurus.
+3. Buat akun Authentication pengurus dan dokumen users sesuai langkah 6.
+4. Buat satu program yang ditugaskan kepada pengurus tersebut.
+5. Logout admin dan login sebagai pengurus.
+6. Pastikan pengurus hanya melihat program yang menjadi tanggung jawabnya.
+7. Coba kirim usulan program dari akun pengurus.
+8. Login kembali sebagai admin dan uji persetujuan/revisi/penolakan usulan.
+9. Ulangi dengan dua akun pengurus berbeda untuk memeriksa pemisahan akses.
+
+BATASAN VERSI SAAT INI
+----------------------
+- Versi ini menghubungkan Firebase Authentication dan Cloud Firestore.
+- Pembuatan akun pengurus masih manual melalui Firebase Console.
+- Upload foto/dokumen bukti kegiatan dan realisasi anggaran rinci belum diaktifkan.
+- Fitur laporan yang mengizinkan pengurus mengubah program resmi belum tersedia; aturan saat ini membuat perubahan program resmi hanya dapat dilakukan admin.
+- Jangan pernah mengunggah Service Account JSON atau private key ke GitHub atau ke index.html.
+- Firebase Web API key dalam konfigurasi frontend bukan pengganti keamanan. Keamanan data bergantung pada Authentication dan Firestore Security Rules.

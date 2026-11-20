@@ -158,24 +158,19 @@
   <div class="modal-backdrop" id="detailModal"><div class="modal"><div class="modal-head"><div><div class="modal-title" id="detailTitle">Detail Program</div><div class="modal-sub" id="detailSub"></div></div><button class="close-btn" data-close="detailModal"><i data-lucide="x"></i></button></div><div class="modal-body" id="detailBody"></div><div class="modal-foot" id="detailActions"><button class="btn btn-light" data-close="detailModal">Tutup</button></div></div></div>
   <div class="toast-wrap" id="toastWrap"></div>
 
-  <!-- Firebase configuration: replace the placeholder values with your NEW Firebase project's web app config. -->
+  <!-- Firebase Web App: Project khusus Program Kerja CB3 (database-gencita). -->
   <script>
-    // ============================================================
-    // KONFIGURASI FIREBASE BARU
-    // 1. Buat project Firebase khusus Program Kerja.
-    // 2. Daftarkan Web App, lalu salin konfigurasi ke bagian ini.
-    // 3. Aktifkan Email/Password Authentication dan Cloud Firestore.
-    // 4. Terapkan Firestore Security Rules yang dijelaskan setelah file ini.
-    // ============================================================
+    // Firebase config web boleh berada di frontend. Keamanan data tetap wajib
+    // ditegakkan melalui Firebase Authentication dan Firestore Security Rules.
     const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCNb7f2pEQpKMyixZu75sisHt9GjAGn1h8",
-  authDomain: "database-gencita.firebaseapp.com",
-  projectId: "database-gencita",
-  storageBucket: "database-gencita.firebasestorage.app",
-  messagingSenderId: "921560823342",
-  appId: "1:921560823342:web:53b0d9e2953af8a5c311bf",
-  measurementId: "G-4X3F3JG7PR"
-};
+      apiKey: "AIzaSyCNb7f2pEQpKMyixZu75sisHt9GjAGn1h8",
+      authDomain: "database-gencita.firebaseapp.com",
+      projectId: "database-gencita",
+      storageBucket: "database-gencita.firebasestorage.app",
+      messagingSenderId: "921560823342",
+      appId: "1:921560823342:web:53b0d9e2953af8a5c311bf",
+      measurementId: "G-4X3F3JG7PR"
+    };
     const FIREBASE_SDK_VERSION = "10.14.1";
   </script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -290,9 +285,50 @@
     document.addEventListener('click',e=>{const v=e.target.closest('[data-view-program]');if(v){const p=programs.find(x=>x.id===v.dataset.viewProgram);if(p)showProgramDetail(p);}const ed=e.target.closest('[data-edit-program]');if(ed){const p=programs.find(x=>x.id===ed.dataset.editProgram);if(p)openProgramForm(p);}const vp=e.target.closest('[data-view-proposal]');if(vp){const p=proposals.find(x=>x.id===vp.dataset.viewProposal);if(p)showProposalDetail(p);}const ap=e.target.closest('[data-approve-proposal]');if(ap){const p=proposals.find(x=>x.id===ap.dataset.approveProposal);if(p)approveProposal(p);}const rp=e.target.closest('[data-reject-proposal]');if(rp){const p=proposals.find(x=>x.id===rp.dataset.rejectProposal);if(p)reviewProposal(p);}});
     $('programSearch').addEventListener('input',renderPrograms);$('programStatusFilter').addEventListener('change',renderPrograms);$('proposalStatusFilter').addEventListener('change',renderProposals);$('peopleSearch').addEventListener('input',renderPeople);$('printReport').addEventListener('click',()=>window.print());
 
-    async function boot(){ $('loginYear').textContent=nowYear;const configured=firebaseConfigured()&&window.firebase; if(configured){try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();mode='firebase';$('modeText').textContent='FIREBASE AKTIF · DATABASE ONLINE';$('demoCredentials').classList.add('hidden');}catch(e){mode='demo';loadDemo();toast('Firebase gagal diinisialisasi. Mode demo digunakan.','error');}}else{mode='demo';loadDemo();}
-      // Saat Firebase diaktifkan, akun admin memakai email. Akun pengurus memakai loginName@akun.programkerja.app.
-      if(mode==='firebase')auth.onAuthStateChanged(async user=>{if(user&&!currentUser){try{currentUser={uid:user.uid};await initData();$('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');setupShell();renderAll();}catch(e){toast(e.message,'error');await auth.signOut();}}});refreshIcons();
+    async function boot(){
+      $('loginYear').textContent=nowYear;
+      const configured=firebaseConfigured();
+      if(configured){
+        try{
+          if(!window.firebase) throw new Error('Library Firebase tidak berhasil dimuat. Periksa koneksi internet atau CDN Firebase.');
+          if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+          auth=firebase.auth();
+          db=firebase.firestore();
+          mode='firebase';
+          $('modeText').textContent='FIREBASE AKTIF · DATABASE ONLINE';
+          $('demoCredentials').classList.add('hidden');
+        }catch(e){
+          mode='firebase-error';
+          $('modeText').textContent='FIREBASE BELUM SIAP';
+          $('demoCredentials').classList.add('hidden');
+          $('loginButton').disabled=true;
+          toast('Firebase belum dapat dijalankan: '+e.message,'error');
+          refreshIcons();
+          return;
+        }
+      }else{
+        mode='demo';
+        loadDemo();
+      }
+      // Admin masuk dengan email; pengurus masuk dengan nama login yang
+      // dipetakan ke loginName@akun.programkerja.app.
+      if(mode==='firebase') auth.onAuthStateChanged(async user=>{
+        if(user&&!currentUser){
+          try{
+            currentUser={uid:user.uid};
+            await initData();
+            $('loginScreen').classList.add('hidden');
+            $('appShell').classList.remove('hidden');
+            setupShell();
+            renderAll();
+          }catch(e){
+            currentUser=null;
+            toast(e.message,'error');
+            await auth.signOut();
+          }
+        }
+      });
+      refreshIcons();
     }
     boot();
   </script>
