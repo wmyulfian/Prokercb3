@@ -40,6 +40,7 @@
     .modal-backdrop{position:fixed;inset:0;background:rgba(18,34,54,.48);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.modal-backdrop.show{display:flex}.modal{background:#fff;border-radius:17px;width:min(760px,100%);max-height:92vh;overflow:auto;box-shadow:0 25px 80px rgba(9,26,47,.22)}.modal.small-modal{width:min(460px,100%)}.modal-head{padding:20px 23px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.modal-title{font:800 16px Manrope,sans-serif;color:#253b56}.modal-sub{font-size:11px;color:var(--muted);margin-top:4px}.modal-body{padding:21px 23px}.modal-foot{padding:15px 23px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:9px}.close-btn{border:0;background:#f2f5f8;border-radius:8px;width:30px;height:30px;display:grid;place-items:center;color:#67778a}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.detail-item .k{font-size:9px;color:#97a3b1;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:5px}.detail-item .v{font-size:12px;color:#3d5069;font-weight:700;line-height:1.5}.detail-block{grid-column:1/-1;padding-top:13px;border-top:1px solid #edf0f4}.detail-block p{font-size:12px;color:#5f6f83;line-height:1.7;margin:6px 0 0;white-space:pre-wrap}
     .toast-wrap{position:fixed;right:20px;bottom:20px;z-index:200;display:grid;gap:8px}.toast{background:#203b59;color:#fff;border-radius:10px;padding:12px 15px;box-shadow:0 10px 28px #183b662b;font-size:12px;max-width:340px;animation:toastIn .2s ease}.toast.error{background:#963f3f}.toast.success{background:#176b4d}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
     .login-screen{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(380px,.9fr);background:#f5f7fa}.login-side{background:var(--navy);padding:8vh 8%;display:flex;flex-direction:column;justify-content:space-between;color:#fff;position:relative;overflow:hidden}.login-side:after{content:'';position:absolute;width:440px;height:440px;border:1px solid #ffffff20;border-radius:50%;right:-120px;bottom:-190px;box-shadow:0 0 0 55px #ffffff08,0 0 0 110px #ffffff05}.login-brand{display:flex;align-items:center;gap:12px;font:800 14px Manrope,sans-serif;letter-spacing:.05em}.login-brand-mark{width:42px;height:42px;border-radius:13px;background:#fff;color:var(--navy);display:grid;place-items:center}.login-copy{max-width:540px;position:relative;z-index:1}.login-copy .eyebrow{color:#b7cce1}.login-copy h1{font:800 clamp(30px,4vw,48px) Manrope,sans-serif;line-height:1.13;margin:15px 0}.login-copy p{font-size:14px;line-height:1.8;color:#d6e1ed;max-width:440px}.login-features{display:flex;gap:22px;flex-wrap:wrap;margin-top:32px}.login-feature{display:flex;align-items:center;gap:8px;font-size:11px;color:#e2ebf4}.login-feature svg{width:16px}.login-foot{font-size:10px;color:#b1c3d6;position:relative;z-index:1}.login-main{display:grid;place-items:center;padding:35px}.login-card{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:34px;box-shadow:0 18px 50px #263f5a12}.login-card h2{font:800 22px Manrope,sans-serif;margin:0;color:#253b56}.login-card>p{font-size:12px;color:#8491a1;margin:7px 0 23px}.login-tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;background:#f2f5f8;border-radius:10px;margin-bottom:22px}.login-tab{border:0;background:transparent;padding:10px;border-radius:8px;font-size:11px;font-weight:800;color:#718096}.login-tab.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px #19395f12}.login-form{display:grid;gap:14px}.login-form label{font-size:10px;font-weight:800;color:#65758a;display:block;margin-bottom:7px}.login-input{width:100%;border:1px solid #e0e6ed;border-radius:9px;padding:12px 12px;font-size:12px;outline:none}.login-input:focus{border-color:#8eabc9;box-shadow:0 0 0 3px #eaf2fa}.login-submit{width:100%;padding:13px;margin-top:4px}.login-help{font-size:10px;color:#98a3b1;line-height:1.6;margin-top:17px;text-align:center}.demo-note{background:#f4f7fa;border:1px solid #e7edf3;border-radius:9px;padding:10px 12px;font-size:10px;color:#718096;line-height:1.6;margin-top:16px}.demo-note strong{color:#4c5f77}.mode-pill{display:inline-flex;align-items:center;gap:5px;color:#748398;font-size:9px;font-weight:800;background:#f0f3f6;border-radius:30px;padding:5px 8px;margin-bottom:14px}.mode-dot{width:6px;height:6px;background:#d39a42;border-radius:50%}
+    .login-divider{display:flex;align-items:center;gap:12px;color:#a0aaba;font-size:10px;font-weight:700;margin:18px 0 13px}.login-divider:before,.login-divider:after{content:"";height:1px;background:var(--line);flex:1}.google-login-button{width:100%;min-height:44px;background:#fff;border:1px solid #dfe5ec;color:#34465d}.google-login-button:hover{background:#f8fafc;border-color:#cbd5e1}.google-login-button:disabled{opacity:.65;cursor:wait}.google-g{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;font:800 15px Arial,sans-serif;color:#4285f4;background:#fff}.google-login-note{font-size:10px;line-height:1.6;color:#8b98a8;text-align:center;margin-top:9px}.google-link-area{margin-top:9px}.google-link-button{width:100%;justify-content:center}.google-link-status{font-size:10px;color:#718096;text-align:center;margin-top:7px;line-height:1.5}.collapsed .google-link-area{display:none!important}
     .mobile-overlay{display:none}.collapsed .sidebar{width:76px}.collapsed .brand{padding:0 18px}.collapsed .brand-text,.collapsed .nav-label,.collapsed .nav-item span,.collapsed .profile-text{display:none}.collapsed .nav-wrap{padding-left:11px;padding-right:11px}.collapsed .nav-item{justify-content:center;padding:12px}.collapsed .side-bottom{padding:12px 10px}.collapsed .profile-mini{justify-content:center}.collapsed .main{margin-left:76px;width:calc(100% - 76px)}
     @media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.content{padding:25px 24px}.topbar{padding:0 24px}}
     @media(max-width:760px){.sidebar{transform:translateX(-100%);width:260px;box-shadow:12px 0 35px #19385c20}.sidebar.mobile-open{transform:translateX(0)}.main,.collapsed .main{margin-left:0;width:100%}.collapsed .sidebar{width:260px}.collapsed .brand-text,.collapsed .nav-label,.collapsed .nav-item span,.collapsed .profile-text{display:block}.collapsed .nav-item{justify-content:flex-start}.mobile-overlay.show{display:block;position:fixed;inset:0;background:#12223870;z-index:25}.topbar{height:70px;padding:0 16px}.content{padding:22px 15px 35px}.welcome{flex-direction:column}.welcome h1{font-size:21px}.grid-two{grid-template-columns:1fr}.stats{gap:10px}.stat-card{padding:14px}.stat-value{font-size:23px}.login-screen{grid-template-columns:1fr}.login-side{display:none}.login-main{padding:20px;min-height:100vh}.login-card{padding:27px 23px}.two-col-form{grid-template-columns:1fr}.form-group.full,.form-section-title{grid-column:1}.rab-head,.rab-row{grid-template-columns:1.3fr .45fr .8fr .8fr 28px;gap:5px;padding:8px 6px}.rab-row input{font-size:10px;padding:7px 5px}.detail-grid{grid-template-columns:1fr 1fr}.table-toolbar{align-items:flex-start;flex-direction:column}.search-box input{width:min(220px,58vw)}}
@@ -69,6 +70,11 @@
           <div><label for="loginPassword">Password</label><input class="login-input" id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password" required></div>
           <button class="btn btn-primary login-submit" id="loginButton" type="submit">Masuk sebagai Admin <i data-lucide="arrow-right"></i></button>
         </form>
+        <div class="login-divider" id="googleLoginDivider"><span>atau</span></div>
+        <button class="btn google-login-button hidden" id="googleLoginButton" type="button">
+          <span class="google-g" aria-hidden="true">G</span><span>Masuk dengan Google</span>
+        </button>
+        <div class="google-login-note" id="googleLoginNote">Gunakan akun Google yang sudah didaftarkan atau dihubungkan oleh admin.</div>
         <div class="demo-note" id="demoCredentials"><strong>Akun demo:</strong><br>Admin: admin@demo.local / admin123<br>Pengurus: Ahmad Fauzi / 123456</div>
         <div class="login-help">Akun pengurus dibuat dan dikelola oleh admin. Hubungi admin organisasi jika belum memiliki akun.</div>
       </div>
@@ -87,7 +93,13 @@
         <button class="nav-item admin-only" data-page="pengurus"><i data-lucide="users"></i><span>Database Pengurus</span></button>
         <button class="nav-item admin-only" data-page="reports"><i data-lucide="chart-no-axes-combined"></i><span>Laporan & Evaluasi</span></button>
       </nav>
-      <div class="side-bottom"><div class="profile-mini"><div class="avatar" id="sideAvatar">AD</div><div class="profile-text"><div class="profile-name" id="sideName">Admin</div><div class="profile-role" id="sideRole">Administrator</div></div></div></div>
+      <div class="side-bottom">
+        <div class="profile-mini"><div class="avatar" id="sideAvatar">AD</div><div class="profile-text"><div class="profile-name" id="sideName">Admin</div><div class="profile-role" id="sideRole">Administrator</div></div></div>
+        <div class="google-link-area hidden" id="googleLinkArea">
+          <button class="btn btn-light btn-sm google-link-button" id="linkGoogleButton" type="button"><i data-lucide="link"></i> Hubungkan akun Google</button>
+          <div class="google-link-status hidden" id="googleLinkedLabel">Akun Google sudah terhubung.</div>
+        </div>
+      </div>
     </aside>
     <div class="mobile-overlay" id="mobileOverlay"></div>
     <main class="main">
@@ -206,6 +218,28 @@
     function loadDemo(){try{const saved=JSON.parse(localStorage.getItem(DEMO_KEY));if(saved){people=saved.people||[];programs=saved.programs||[];proposals=saved.proposals||[];}else{people=structuredClone(demoSeed.people);programs=structuredClone(demoSeed.programs);proposals=structuredClone(demoSeed.proposals);saveDemo();}}catch(e){people=structuredClone(demoSeed.people);programs=structuredClone(demoSeed.programs);proposals=structuredClone(demoSeed.proposals);}}
     function saveDemo(){localStorage.setItem(DEMO_KEY,JSON.stringify({people,programs,proposals}));}
     function firebaseConfigured(){return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('GANTI_') && FIREBASE_CONFIG.projectId && !FIREBASE_CONFIG.projectId.startsWith('GANTI_');}
+    function googleAuthErrorMessage(err){
+      const messages={
+        'auth/operation-not-allowed':'Login Google belum diaktifkan. Aktifkan Google pada Firebase Authentication → Sign-in method.',
+        'auth/unauthorized-domain':'Domain website belum diizinkan. Tambahkan domain ini di Firebase Authentication → Settings → Authorized domains.',
+        'auth/popup-blocked':'Popup login diblokir browser. Izinkan popup untuk website ini lalu coba kembali.',
+        'auth/popup-closed-by-user':'Jendela login Google ditutup sebelum proses selesai.',
+        'auth/account-exists-with-different-credential':'Email Google ini sudah memiliki akun dengan metode login lain. Masuk dahulu menggunakan metode lama, lalu pilih Hubungkan akun Google di bagian profil.',
+        'auth/credential-already-in-use':'Akun Google ini sudah terhubung ke akun Firebase lain. Hubungi admin untuk pemeriksaan akun ganda.',
+        'auth/provider-already-linked':'Akun Google sudah terhubung dengan akun ini.'
+      };
+      return messages[err?.code]||err?.message||'Login Google gagal. Silakan coba kembali.';
+    }
+    function googleProvider(){const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});return provider;}
+    function refreshGoogleLinkStatus(){
+      const area=$('googleLinkArea'),button=$('linkGoogleButton'),label=$('googleLinkedLabel');
+      if(!area||!button||!label)return;
+      const signedIn=mode==='firebase'&&!!auth?.currentUser;
+      area.classList.toggle('hidden',!signedIn);
+      const linked=!!auth?.currentUser?.providerData?.some(p=>p.providerId==='google.com');
+      button.classList.toggle('hidden',linked);
+      label.classList.toggle('hidden',!linked);
+    }
     function toast(msg,type=''){const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;$('toastWrap').appendChild(el);setTimeout(()=>el.remove(),3600);}
     function refreshIcons(){if(window.lucide)lucide.createIcons();}
     function statusLabel(s){return ({belum:'Belum dimulai',berjalan:'Sedang berjalan',selesai:'Selesai',ditunda:'Ditunda',dibatalkan:'Dibatalkan',pending:'Menunggu persetujuan',approved:'Disetujui',revision:'Perlu revisi',rejected:'Ditolak'})[s]||s||'—';}
@@ -213,7 +247,7 @@
     function isAdmin(){return currentUser?.role==='admin';}
     function visiblePrograms(){let list=programs.filter(p=>String(p.tahun)===String(selectedYear));if(!isAdmin())list=list.filter(p=>p.penanggungJawabId===currentUser.pengurusId);return list;}
     function visibleProposals(){return isAdmin()?proposals:proposals.filter(p=>p.pengurusId===currentUser.pengurusId);}
-    async function initData(){if(mode==='demo'){loadDemo();return;}const uid=currentUser.uid;const userDoc=await db.collection('users').doc(uid).get();if(!userDoc.exists)throw new Error('Profil pengguna belum terdaftar di koleksi users.');const profile=userDoc.data();if(profile.role!=='admin'&&profile.role!=='pengurus')throw new Error('Peran akun tidak dikenali.');currentUser={...currentUser,...profile};
+    async function initData(){if(mode==='demo'){loadDemo();return;}const uid=currentUser.uid;const userDoc=await db.collection('users').doc(uid).get();if(!userDoc.exists){const fbUser=auth?.currentUser;const usedGoogle=fbUser?.providerData?.some(p=>p.providerId==='google.com');if(usedGoogle)throw new Error(`Akun Google ${fbUser.email||''} belum didaftarkan admin. Kirim email dan UID berikut kepada admin untuk dibuatkan profil users: ${uid}`);throw new Error('Profil pengguna belum terdaftar di koleksi users. Hubungi admin.');}const profile=userDoc.data();if(profile.role!=='admin'&&profile.role!=='pengurus')throw new Error('Peran akun tidak dikenali.');currentUser={...currentUser,...profile};
       if(isAdmin()){
         const [p,q,r]=await Promise.all([db.collection('program_kerja').get(),db.collection('usulan_program').get(),db.collection('pengurus').get()]);programs=p.docs.map(d=>({id:d.id,...d.data()}));proposals=q.docs.map(d=>({id:d.id,...d.data()}));people=r.docs.map(d=>({id:d.id,...d.data()}));
       }else{
@@ -239,9 +273,36 @@
       if(mode==='demo')await initData();$('loginPassword').value='';$('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');setupShell();renderAll();toast('Berhasil masuk. Selamat bekerja!','success');
     }catch(err){toast(err.message||'Gagal masuk. Periksa akun Anda.','error');if(mode==='firebase'&&auth?.currentUser)await auth.signOut();}finally{btn.disabled=false;setLoginTab(activeLoginTab);}}
     $('loginForm').addEventListener('submit',login);
+    async function loginWithGoogle(){
+      const btn=$('googleLoginButton');
+      if(mode!=='firebase'||!auth){toast('Login Google hanya tersedia setelah Firebase aktif.','error');return;}
+      btn.disabled=true;btn.innerHTML='<span class="google-g">G</span><span>Membuka Google...</span>';
+      try{
+        // Di layar kecil gunakan redirect karena popup lebih sering diblokir browser mobile.
+        if(window.matchMedia('(max-width: 760px)').matches){await auth.signInWithRedirect(googleProvider());return;}
+        await auth.signInWithPopup(googleProvider());
+        // Dashboard dibuka oleh auth.onAuthStateChanged setelah Firebase mengonfirmasi login.
+      }catch(err){toast(googleAuthErrorMessage(err),'error');}
+      finally{btn.disabled=false;btn.innerHTML='<span class="google-g">G</span><span>Masuk dengan Google</span>';}
+    }
+    $('googleLoginButton').addEventListener('click',loginWithGoogle);
+    async function linkGoogleAccount(){
+      const btn=$('linkGoogleButton');
+      if(mode!=='firebase'||!auth?.currentUser){toast('Silakan masuk terlebih dahulu.','error');return;}
+      btn.disabled=true;btn.textContent='Menghubungkan...';
+      try{
+        if(window.matchMedia('(max-width: 760px)').matches){await auth.currentUser.linkWithRedirect(googleProvider());return;}
+        await auth.currentUser.linkWithPopup(googleProvider());
+        await auth.currentUser.reload();
+        refreshGoogleLinkStatus();
+        toast('Akun Google berhasil dihubungkan. Anda dapat menggunakannya pada login berikutnya.','success');
+      }catch(err){toast(googleAuthErrorMessage(err),'error');}
+      finally{btn.disabled=false;btn.innerHTML='<i data-lucide="link"></i> Hubungkan akun Google';refreshIcons();refreshGoogleLinkStatus();}
+    }
+    $('linkGoogleButton').addEventListener('click',linkGoogleAccount);
     async function logout(){if(mode==='firebase'&&auth)await auth.signOut();currentUser=null;$('appShell').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginPassword').value='';}
     $('logoutButton').addEventListener('click',logout);
-    function setupShell(){const admin=isAdmin();document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('hidden',!admin));document.querySelectorAll('.pengurus-only').forEach(el=>el.classList.toggle('hidden',admin));$('sideName').textContent=currentUser.nama||'Pengguna';$('sideRole').textContent=admin?'Administrator':'Pengurus';$('sideAvatar').textContent=initials(currentUser.nama||'');$('navProgramText').textContent=admin?'Program Kerja':'Program Saya';$('navProposalText').textContent=admin?'Persetujuan Usulan':'Usulan Saya';$('welcomeTitle').textContent=`Selamat datang, ${currentUser.nama||'Pengguna'}`;$('welcomeDesc').textContent=admin?'Pantau perencanaan dan pelaksanaan program kerja organisasi.':'Berikut program yang menjadi tanggung jawab Anda dan status usulan yang diajukan.';populateYears();}
+    function setupShell(){const admin=isAdmin();document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('hidden',!admin));document.querySelectorAll('.pengurus-only').forEach(el=>el.classList.toggle('hidden',admin));$('sideName').textContent=currentUser.nama||'Pengguna';$('sideRole').textContent=admin?'Administrator':'Pengurus';$('sideAvatar').textContent=initials(currentUser.nama||'');$('navProgramText').textContent=admin?'Program Kerja':'Program Saya';$('navProposalText').textContent=admin?'Persetujuan Usulan':'Usulan Saya';$('welcomeTitle').textContent=`Selamat datang, ${currentUser.nama||'Pengguna'}`;$('welcomeDesc').textContent=admin?'Pantau perencanaan dan pelaksanaan program kerja organisasi.':'Berikut program yang menjadi tanggung jawab Anda dan status usulan yang diajukan.';populateYears();refreshGoogleLinkStatus();}
     function populateYears(){const years=new Set([nowYear,nowYear+1,...programs.map(p=>Number(p.tahun)),...proposals.map(p=>Number(p.tahun))]);const opts=[...years].filter(Boolean).sort((a,b)=>b-a);if(!opts.includes(Number(selectedYear)))selectedYear=String(opts[0]||nowYear);$('globalYear').innerHTML=opts.map(y=>`<option value="${y}" ${String(y)===String(selectedYear)?'selected':''}>Tahun ${y}</option>`).join('');$('fYear').value=selectedYear;$('pYear').value=selectedYear;}
     $('globalYear').addEventListener('change',e=>{selectedYear=e.target.value;renderAll();});
     function navigate(page){activePage=page;document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.page-section').forEach(s=>s.classList.toggle('active',s.id==='page-'+page));const names={dashboard:['Dashboard','Ringkasan program kerja organisasi'],program:[isAdmin()?'Program Kerja':'Program Saya','Daftar program berdasarkan tahun'],proposals:[isAdmin()?'Persetujuan Usulan':'Usulan Saya','Pengajuan program kerja'],pengurus:['Database Pengurus','Data dan akses pengurus'],reports:['Laporan & Evaluasi','Monitoring program dan anggaran']};$('pageHeading').textContent=names[page][0];$('pageSub').textContent=names[page][1];$('sidebar').classList.remove('mobile-open');$('mobileOverlay').classList.remove('show');renderAll();}
@@ -297,10 +358,16 @@
           mode='firebase';
           $('modeText').textContent='FIREBASE AKTIF · DATABASE ONLINE';
           $('demoCredentials').classList.add('hidden');
+          $('googleLoginDivider').classList.remove('hidden');
+          $('googleLoginButton').classList.remove('hidden');
+          $('googleLoginNote').classList.remove('hidden');
         }catch(e){
           mode='firebase-error';
           $('modeText').textContent='FIREBASE BELUM SIAP';
           $('demoCredentials').classList.add('hidden');
+          $('googleLoginDivider').classList.add('hidden');
+          $('googleLoginButton').classList.add('hidden');
+          $('googleLoginNote').classList.add('hidden');
           $('loginButton').disabled=true;
           toast('Firebase belum dapat dijalankan: '+e.message,'error');
           refreshIcons();
@@ -309,25 +376,32 @@
       }else{
         mode='demo';
         loadDemo();
+        $('googleLoginDivider').classList.add('hidden');
+        $('googleLoginButton').classList.add('hidden');
+        $('googleLoginNote').classList.add('hidden');
       }
       // Admin masuk dengan email; pengurus masuk dengan nama login yang
       // dipetakan ke loginName@akun.programkerja.app.
-      if(mode==='firebase') auth.onAuthStateChanged(async user=>{
-        if(user&&!currentUser){
-          try{
-            currentUser={uid:user.uid};
-            await initData();
-            $('loginScreen').classList.add('hidden');
-            $('appShell').classList.remove('hidden');
-            setupShell();
-            renderAll();
-          }catch(e){
-            currentUser=null;
-            toast(e.message,'error');
-            await auth.signOut();
+      if(mode==='firebase'){
+        auth.onAuthStateChanged(async user=>{
+          if(user&&!currentUser){
+            try{
+              currentUser={uid:user.uid};
+              await initData();
+              $('loginScreen').classList.add('hidden');
+              $('appShell').classList.remove('hidden');
+              setupShell();
+              renderAll();
+            }catch(e){
+              currentUser=null;
+              toast(e.message,'error');
+              await auth.signOut();
+            }
           }
-        }
-      });
+          if(!user)refreshGoogleLinkStatus();
+        });
+        auth.getRedirectResult().then(result=>{if(result?.user)refreshGoogleLinkStatus();}).catch(err=>toast(googleAuthErrorMessage(err),'error'));
+      }
       refreshIcons();
     }
     boot();
