@@ -66,7 +66,7 @@
         <div class="login-tabs"><button class="login-tab active" data-login-tab="admin">Admin</button><button class="login-tab" data-login-tab="pengurus">Pengurus</button></div>
         <form id="loginForm" class="login-form">
           <div id="adminLoginFields"><div><label for="loginEmail">Email admin</label><input class="login-input" id="loginEmail" type="email" placeholder="admin@organisasi.id" autocomplete="username"></div></div>
-          <div id="pengurusLoginFields" class="hidden"><div><label for="loginName">Nama pengurus</label><input class="login-input" id="loginName" type="text" placeholder="Masukkan nama sesuai akun" autocomplete="username"></div></div>
+          <div id="pengurusLoginFields" class="hidden"><div><label for="loginName">Nama pengurus / nama login</label><input class="login-input" id="loginName" type="text" placeholder="Contoh: Ahmad Fauzi" autocomplete="username"></div></div>
           <div><label for="loginPassword">Password</label><input class="login-input" id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password" required></div>
           <button class="btn btn-primary login-submit" id="loginButton" type="submit">Masuk sebagai Admin <i data-lucide="arrow-right"></i></button>
         </form>
@@ -74,7 +74,7 @@
         <button class="btn google-login-button hidden" id="googleLoginButton" type="button">
           <span class="google-g" aria-hidden="true">G</span><span>Masuk dengan Google</span>
         </button>
-        <div class="google-login-note" id="googleLoginNote">Gunakan akun Google yang sudah didaftarkan atau dihubungkan oleh admin.</div>
+        <div class="google-login-note" id="googleLoginNote">Login Google hanya untuk Admin. Pengurus menggunakan nama login dan password yang dibuat Admin.</div>
         <div class="demo-note" id="demoCredentials"><strong>Akun demo:</strong><br>Admin: admin@demo.local / admin123<br>Pengurus: Ahmad Fauzi / 123456</div>
         <div class="login-help">Akun pengurus dibuat dan dikelola oleh admin. Hubungi admin organisasi jika belum memiliki akun.</div>
       </div>
@@ -99,6 +99,7 @@
           <button class="btn btn-light btn-sm google-link-button" id="linkGoogleButton" type="button"><i data-lucide="link"></i> Hubungkan akun Google</button>
           <div class="google-link-status hidden" id="googleLinkedLabel">Akun Google sudah terhubung.</div>
         </div>
+        <button class="btn btn-light btn-sm hidden" id="changePengurusPasswordButton" type="button" style="width:100%;margin-top:8px"><i data-lucide="key-round"></i> Ganti password</button>
       </div>
     </aside>
     <div class="mobile-overlay" id="mobileOverlay"></div>
@@ -165,7 +166,9 @@
     <div class="form-group"><label class="form-label">Usulan penanggung jawab</label><input class="form-control" id="pResponsible" placeholder="Nama pengurus"></div>
   </div></div><div class="modal-foot"><button type="button" class="btn btn-light" data-close="proposalModal">Batal</button><button type="submit" class="btn btn-primary">Kirim Usulan</button></div></form></div></div>
 
-  <div class="modal-backdrop" id="personModal"><div class="modal small-modal"><div class="modal-head"><div><div class="modal-title">Tambah Pengurus</div><div class="modal-sub">Data ini digunakan untuk penanggung jawab program.</div></div><button class="close-btn" data-close="personModal"><i data-lucide="x"></i></button></div><form id="personForm"><div class="modal-body"><div class="two-col-form"><div class="form-group full"><label class="form-label">Nama lengkap <span>*</span></label><input class="form-control" id="personName" required placeholder="Nama pengurus"></div><div class="form-group full"><label class="form-label">Jabatan / dapukan</label><input class="form-control" id="personPosition" placeholder="Contoh: Ketua bidang"></div><div class="form-group full"><label class="form-label">Bidang</label><input class="form-control" id="personField" placeholder="Nama bidang"></div><div class="form-group full"><label class="form-label">Nama login (unik) <span>*</span></label><input class="form-control" id="personLogin" required placeholder="Contoh: ahmad.fauzi"><div class="small muted">Dipakai saat masuk sebagai pengurus. Akun autentikasi perlu dibuat di Firebase sesuai panduan konfigurasi.</div></div></div></div><div class="modal-foot"><button type="button" class="btn btn-light" data-close="personModal">Batal</button><button type="submit" class="btn btn-primary">Simpan Pengurus</button></div></form></div></div>
+  <div class="modal-backdrop" id="personModal"><div class="modal small-modal"><div class="modal-head"><div><div class="modal-title">Tambah Pengurus</div><div class="modal-sub">Data ini digunakan untuk penanggung jawab program.</div></div><button class="close-btn" data-close="personModal"><i data-lucide="x"></i></button></div><form id="personForm"><div class="modal-body"><div class="two-col-form"><div class="form-group full"><label class="form-label">Nama lengkap <span>*</span></label><input class="form-control" id="personName" required placeholder="Nama pengurus"></div><div class="form-group full"><label class="form-label">Jabatan / dapukan</label><input class="form-control" id="personPosition" placeholder="Contoh: Ketua bidang"></div><div class="form-group full"><label class="form-label">Bidang</label><input class="form-control" id="personField" placeholder="Nama bidang"></div><div class="form-group full"><label class="form-label">Nama login (unik) <span>*</span></label><input class="form-control" id="personLogin" required placeholder="Contoh: ahmad.fauzi" autocomplete="off"><div class="small muted">Pengurus dapat login memakai nama lengkap atau nama login ini.</div></div><div class="form-group full"><label class="form-label">Password awal <span>*</span></label><input class="form-control" id="personPassword" type="password" required minlength="10" maxlength="128" autocomplete="new-password" placeholder="Minimal 10 karakter"><div class="small muted">Password disimpan dalam bentuk hash di server, bukan teks biasa. Pengurus dapat menggantinya sendiri setelah login.</div></div></div></div><div class="modal-foot"><button type="button" class="btn btn-light" data-close="personModal">Batal</button><button type="submit" class="btn btn-primary">Simpan Pengurus</button></div></form></div></div>
+
+  <div class="modal-backdrop" id="pengurusPasswordModal"><div class="modal small-modal"><div class="modal-head"><div><div class="modal-title">Ganti Password Pengurus</div><div class="modal-sub">Gunakan password baru yang tidak sama dengan password lama.</div></div><button class="close-btn" data-close="pengurusPasswordModal" type="button"><i data-lucide="x"></i></button></div><form id="pengurusPasswordForm"><div class="modal-body"><div class="form-group"><label class="form-label">Password saat ini <span>*</span></label><input class="form-control" id="currentPengurusPassword" type="password" required autocomplete="current-password"></div><div class="form-group" style="margin-top:12px"><label class="form-label">Password baru <span>*</span></label><input class="form-control" id="newPengurusPassword" type="password" required minlength="10" maxlength="128" autocomplete="new-password"><div class="small muted">Minimal 10 karakter.</div></div><div class="form-group" style="margin-top:12px"><label class="form-label">Ulangi password baru <span>*</span></label><input class="form-control" id="confirmPengurusPassword" type="password" required minlength="10" maxlength="128" autocomplete="new-password"></div></div><div class="modal-foot"><button type="button" class="btn btn-light" data-close="pengurusPasswordModal">Batal</button><button type="submit" class="btn btn-primary" id="savePengurusPasswordButton">Simpan Password</button></div></form></div></div>
 
   <div class="modal-backdrop" id="detailModal"><div class="modal"><div class="modal-head"><div><div class="modal-title" id="detailTitle">Detail Program</div><div class="modal-sub" id="detailSub"></div></div><button class="close-btn" data-close="detailModal"><i data-lucide="x"></i></button></div><div class="modal-body" id="detailBody"></div><div class="modal-foot" id="detailActions"><button class="btn btn-light" data-close="detailModal">Tutup</button></div></div></div>
   <div class="toast-wrap" id="toastWrap"></div>
@@ -196,7 +199,7 @@
     const initials = (s='') => s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase() || '??';
     const slug = (s='') => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'');
     const nowYear = new Date().getFullYear();
-    let mode = 'demo', auth=null, db=null, currentUser=null, activeLoginTab='admin', activePage='dashboard';
+    let mode = 'demo', auth=null, db=null, currentUser=null, sessionMode=null, activeLoginTab='admin', activePage='dashboard';
     let programs=[], proposals=[], people=[], selectedYear=String(nowYear), rabDraft=[];
     const DEMO_KEY='programKerjaDemoData_v1';
     const demoSeed={
@@ -218,6 +221,45 @@
     function loadDemo(){try{const saved=JSON.parse(localStorage.getItem(DEMO_KEY));if(saved){people=saved.people||[];programs=saved.programs||[];proposals=saved.proposals||[];}else{people=structuredClone(demoSeed.people);programs=structuredClone(demoSeed.programs);proposals=structuredClone(demoSeed.proposals);saveDemo();}}catch(e){people=structuredClone(demoSeed.people);programs=structuredClone(demoSeed.programs);proposals=structuredClone(demoSeed.proposals);}}
     function saveDemo(){localStorage.setItem(DEMO_KEY,JSON.stringify({people,programs,proposals}));}
     function firebaseConfigured(){return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('GANTI_') && FIREBASE_CONFIG.projectId && !FIREBASE_CONFIG.projectId.startsWith('GANTI_');}
+    const API_BASE=['pages.cb3.web.id','wmyulfian.github.io'].includes(window.location.hostname)?'https://www.cb3.web.id':'';
+    async function apiRequest(path,options={}){
+      const headers={...(options.headers||{})};
+      let body=options.body;
+      if(body!==undefined&&typeof body!=='string'){headers['Content-Type']='application/json';body=JSON.stringify(body);}
+      const response=await fetch(`${API_BASE}${path}`,{method:options.method||'GET',credentials:'include',headers,body,cache:'no-store'});
+      let payload={};try{payload=await response.json();}catch{}
+      if(!response.ok){const error=new Error(payload.error||`Permintaan gagal (${response.status}).`);error.status=response.status;error.code=payload.code;throw error;}
+      return payload;
+    }
+    async function adminApiRequest(path,options={}){
+      if(!auth?.currentUser)throw new Error('Sesi Admin tidak tersedia. Silakan login ulang.');
+      const token=await auth.currentUser.getIdToken(true);
+      return apiRequest(path,{...options,headers:{...(options.headers||{}),Authorization:`Bearer ${token}`}});
+    }
+    async function loadAdminAccountStatuses(){
+      if(!isAdmin()||mode!=='firebase')return;
+      try{
+        const result=await adminApiRequest('/api/admin/pengurus-accounts');
+        const byPerson=new Map((result.accounts||[]).map(a=>[a.pengurusId,a]));
+        people=people.map(person=>{const account=byPerson.get(person.id);return {...person,hasLoginAccount:!!account,accountLoginName:account?.loginName||person.loginName||'',accountActive:account?account.aktif:null};});
+      }catch(error){
+        console.warn('Status akun pengurus belum dapat dimuat:',error);
+        people=people.map(person=>({...person,hasLoginAccount:false,accountLoginName:person.loginName||'',accountActive:null}));
+      }
+    }
+    function showApp(){
+      $('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');setupShell();renderAll();
+    }
+    async function restorePengurusSession(){
+      if(mode!=='firebase'||sessionMode||currentUser)return;
+      try{
+        const result=await apiRequest('/api/pengurus/data');
+        sessionMode='pengurus';currentUser=result.user;programs=result.programs||[];proposals=result.proposals||[];people=result.people||[];
+        showApp();
+      }catch(error){
+        if(error.status&&error.status!==401)console.warn('Pemulihan sesi Pengurus gagal:',error);
+      }
+    }
     function googleAuthErrorMessage(err){
       const messages={
         'auth/operation-not-allowed':'Login Google belum diaktifkan. Aktifkan Google pada Firebase Authentication → Sign-in method.',
@@ -234,7 +276,7 @@
     function refreshGoogleLinkStatus(){
       const area=$('googleLinkArea'),button=$('linkGoogleButton'),label=$('googleLinkedLabel');
       if(!area||!button||!label)return;
-      const signedIn=mode==='firebase'&&!!auth?.currentUser;
+      const signedIn=mode==='firebase'&&sessionMode==='admin'&&!!auth?.currentUser;
       area.classList.toggle('hidden',!signedIn);
       const linked=!!auth?.currentUser?.providerData?.some(p=>p.providerId==='google.com');
       button.classList.toggle('hidden',linked);
@@ -247,42 +289,82 @@
     function isAdmin(){return currentUser?.role==='admin';}
     function visiblePrograms(){let list=programs.filter(p=>String(p.tahun)===String(selectedYear));if(!isAdmin())list=list.filter(p=>p.penanggungJawabId===currentUser.pengurusId);return list;}
     function visibleProposals(){return isAdmin()?proposals:proposals.filter(p=>p.pengurusId===currentUser.pengurusId);}
-    async function initData(){if(mode==='demo'){loadDemo();return;}const uid=currentUser.uid;const userDoc=await db.collection('users').doc(uid).get();if(!userDoc.exists){const fbUser=auth?.currentUser;const usedGoogle=fbUser?.providerData?.some(p=>p.providerId==='google.com');if(usedGoogle)throw new Error(`Akun Google ${fbUser.email||''} belum didaftarkan admin. Kirim email dan UID berikut kepada admin untuk dibuatkan profil users: ${uid}`);throw new Error(   `PROFIL ADMIN BELUM DITEMUKAN. Email: ${fbUser?.email || '-'} UID: ${uid} Document ID yang wajib dibuat: users/${uid}` );}const profile=userDoc.data();if(profile.role!=='admin'&&profile.role!=='pengurus')throw new Error('Peran akun tidak dikenali.');currentUser={...currentUser,...profile};
-      if(isAdmin()){
-        const [p,q,r]=await Promise.all([db.collection('program_kerja').get(),db.collection('usulan_program').get(),db.collection('pengurus').get()]);programs=p.docs.map(d=>({id:d.id,...d.data()}));proposals=q.docs.map(d=>({id:d.id,...d.data()}));people=r.docs.map(d=>({id:d.id,...d.data()}));
-      }else{
-        const pid=currentUser.pengurusId;if(!pid)throw new Error('Akun belum dihubungkan dengan data pengurus.');
-        const [p,q,r]=await Promise.all([db.collection('program_kerja').where('penanggungJawabId','==',pid).get(),db.collection('usulan_program').where('pengurusId','==',pid).get(),db.collection('pengurus').doc(pid).get()]);programs=p.docs.map(d=>({id:d.id,...d.data()}));proposals=q.docs.map(d=>({id:d.id,...d.data()}));people=r.exists?[{id:r.id,...r.data()}]:[];
+    async function initData(){
+      if(mode==='demo'){loadDemo();return;}
+      if(sessionMode==='pengurus'){
+        const result=await apiRequest('/api/pengurus/data');
+        currentUser=result.user;programs=result.programs||[];proposals=result.proposals||[];people=result.people||[];
+        return;
       }
+      const user=auth?.currentUser;
+      if(!user)throw new Error('Sesi Admin tidak ditemukan. Silakan login kembali.');
+      const userDoc=await db.collection('users').doc(user.uid).get();
+      if(!userDoc.exists)throw new Error(`Profil Admin belum ditemukan pada users/${user.uid}.`);
+      const profile=userDoc.data();
+      if(profile.role!=='admin')throw new Error('Login Firebase hanya diperuntukkan bagi Admin. Pengurus menggunakan nama login dan password internal.');
+      sessionMode='admin';currentUser={uid:user.uid,...profile};
+      const [p,q,r]=await Promise.all([
+        db.collection('program_kerja').get(),
+        db.collection('usulan_program').get(),
+        db.collection('pengurus').get()
+      ]);
+      programs=p.docs.map(d=>({id:d.id,...d.data()}));
+      proposals=q.docs.map(d=>({id:d.id,...d.data()}));
+      people=r.docs.map(d=>({id:d.id,...d.data()}));
+      await loadAdminAccountStatuses();
     }
-    function setLoginTab(tab){activeLoginTab=tab;document.querySelectorAll('[data-login-tab]').forEach(b=>b.classList.toggle('active',b.dataset.loginTab===tab));$('adminLoginFields').classList.toggle('hidden',tab!=='admin');$('pengurusLoginFields').classList.toggle('hidden',tab!=='pengurus');$('loginButton').innerHTML=`Masuk sebagai ${tab==='admin'?'Admin':'Pengurus'} <i data-lucide="arrow-right"></i>`;refreshIcons();}
+    function setLoginTab(tab){activeLoginTab=tab;document.querySelectorAll('[data-login-tab]').forEach(b=>b.classList.toggle('active',b.dataset.loginTab===tab));$('adminLoginFields').classList.toggle('hidden',tab!=='admin');$('pengurusLoginFields').classList.toggle('hidden',tab!=='pengurus');$('loginButton').innerHTML=`Masuk sebagai ${tab==='admin'?'Admin':'Pengurus'} <i data-lucide="arrow-right"></i>`;$('googleLoginDivider').classList.toggle('hidden',mode!=='firebase'||tab!=='admin');$('googleLoginButton').classList.toggle('hidden',mode!=='firebase'||tab!=='admin');$('googleLoginNote').classList.toggle('hidden',mode!=='firebase'||tab!=='admin');refreshIcons();}
     document.querySelectorAll('[data-login-tab]').forEach(b=>b.addEventListener('click',()=>setLoginTab(b.dataset.loginTab)));
-    async function login(e){e.preventDefault();const pass=$('loginPassword').value;const btn=$('loginButton');btn.disabled=true;btn.textContent='Memeriksa...';try{
-      if(mode==='demo'){
-        if(activeLoginTab==='admin'){
-          if($('loginEmail').value.trim().toLowerCase()!=='admin@demo.local'||pass!=='admin123')throw new Error('Email atau password admin demo tidak sesuai.');
-          currentUser={uid:'demo-admin',role:'admin',nama:'Administrator'};
+    async function login(e){
+      e.preventDefault();
+      const pass=$('loginPassword').value;
+      const btn=$('loginButton');
+      btn.disabled=true;btn.textContent='Memeriksa...';
+      try{
+        if(mode==='demo'){
+          if(activeLoginTab==='admin'){
+            if($('loginEmail').value.trim().toLowerCase()!=='admin@demo.local'||pass!=='admin123')throw new Error('Email atau password admin demo tidak sesuai.');
+            currentUser={uid:'demo-admin',role:'admin',nama:'Administrator'};sessionMode='demo';
+          }else{
+            const name=$('loginName').value.trim();
+            const person=people.find(p=>p.nama.toLowerCase()===name.toLowerCase()||p.loginName.toLowerCase()===slug(name));
+            if(!person||pass!=='123456')throw new Error('Nama atau password pengurus demo tidak sesuai.');
+            currentUser={uid:'demo-'+person.id,role:'pengurus',nama:person.nama,pengurusId:person.id};sessionMode='demo';
+          }
+          await initData();
+        }else if(activeLoginTab==='admin'){
+          sessionMode='admin';
+          const email=$('loginEmail').value.trim();
+          const credential=await auth.signInWithEmailAndPassword(email,pass);
+          currentUser={uid:credential.user.uid,role:'admin'};
+          await initData();
         }else{
-          const name=$('loginName').value.trim();const person=people.find(p=>p.nama.toLowerCase()===name.toLowerCase()||p.loginName.toLowerCase()===slug(name));if(!person||pass!=='123456')throw new Error('Nama atau password pengurus demo tidak sesuai.');currentUser={uid:'demo-'+person.id,role:'pengurus',nama:person.nama,pengurusId:person.id};
+          const loginName=slug($('loginName').value);
+          if(!loginName)throw new Error('Masukkan nama pengurus atau nama login.');
+          const result=await apiRequest('/api/pengurus/login',{method:'POST',body:{loginName,password:pass}});
+          sessionMode='pengurus';currentUser=result.user;
+          await initData();
         }
-      }else{
-        let email=$('loginEmail').value.trim();if(activeLoginTab==='pengurus'){const loginName=slug($('loginName').value);if(!loginName)throw new Error('Masukkan nama login pengurus.');email=loginName+'@akun.programkerja.app';}
-        const cred=await auth.signInWithEmailAndPassword(email,pass);currentUser={uid:cred.user.uid};await initData();
-        if((activeLoginTab==='admin'&&currentUser.role!=='admin')||(activeLoginTab==='pengurus'&&currentUser.role!=='pengurus'))throw new Error('Jenis akun tidak sesuai dengan pilihan login.');
-      }
-      if(mode==='demo')await initData();$('loginPassword').value='';$('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');setupShell();renderAll();toast('Berhasil masuk. Selamat bekerja!','success');
-    }catch(err){toast(err.message||'Gagal masuk. Periksa akun Anda.','error');if(mode==='firebase'&&auth?.currentUser)await auth.signOut();}finally{btn.disabled=false;setLoginTab(activeLoginTab);}}
+        $('loginPassword').value='';showApp();toast('Berhasil masuk. Selamat bekerja!','success');
+      }catch(err){
+        toast(err.message||'Gagal masuk. Periksa akun Anda.','error');
+        if(activeLoginTab==='admin'&&mode==='firebase'&&auth?.currentUser)await auth.signOut().catch(()=>{});
+        if(activeLoginTab==='pengurus'&&mode==='firebase')await apiRequest('/api/pengurus/logout',{method:'POST'}).catch(()=>{});
+        sessionMode=null;currentUser=null;
+      }finally{btn.disabled=false;setLoginTab(activeLoginTab);}
+    }
     $('loginForm').addEventListener('submit',login);
     async function loginWithGoogle(){
       const btn=$('googleLoginButton');
-      if(mode!=='firebase'||!auth){toast('Login Google hanya tersedia setelah Firebase aktif.','error');return;}
+      if(mode!=='firebase'||!auth||activeLoginTab!=='admin'){toast('Login Google hanya tersedia untuk Admin.','error');return;}
       btn.disabled=true;btn.innerHTML='<span class="google-g">G</span><span>Membuka Google...</span>';
       try{
+        sessionMode='admin';
         // Di layar kecil gunakan redirect karena popup lebih sering diblokir browser mobile.
         if(window.matchMedia('(max-width: 760px)').matches){await auth.signInWithRedirect(googleProvider());return;}
         await auth.signInWithPopup(googleProvider());
         // Dashboard dibuka oleh auth.onAuthStateChanged setelah Firebase mengonfirmasi login.
-      }catch(err){toast(googleAuthErrorMessage(err),'error');}
+      }catch(err){sessionMode=null;toast(googleAuthErrorMessage(err),'error');}
       finally{btn.disabled=false;btn.innerHTML='<span class="google-g">G</span><span>Masuk dengan Google</span>';}
     }
     $('googleLoginButton').addEventListener('click',loginWithGoogle);
@@ -300,9 +382,45 @@
       finally{btn.disabled=false;btn.innerHTML='<i data-lucide="link"></i> Hubungkan akun Google';refreshIcons();refreshGoogleLinkStatus();}
     }
     $('linkGoogleButton').addEventListener('click',linkGoogleAccount);
-    async function logout(){if(mode==='firebase'&&auth)await auth.signOut();currentUser=null;$('appShell').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginPassword').value='';}
+    async function logout(){
+      // Selalu bersihkan cookie sesi internal, termasuk ketika Admin keluar,
+      // agar sesi Pengurus lama pada browser yang sama tidak pulih kembali.
+      await apiRequest('/api/pengurus/logout',{method:'POST'}).catch(error=>console.warn('Pembersihan sesi Pengurus:',error));
+      if(sessionMode==='admin'&&auth)await auth.signOut().catch(error=>console.warn('Logout Admin:',error));
+      sessionMode=null;currentUser=null;programs=[];proposals=[];people=[];
+      $('appShell').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginPassword').value='';
+      setLoginTab('admin');
+    }
     $('logoutButton').addEventListener('click',logout);
-    function setupShell(){const admin=isAdmin();document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('hidden',!admin));document.querySelectorAll('.pengurus-only').forEach(el=>el.classList.toggle('hidden',admin));$('sideName').textContent=currentUser.nama||'Pengguna';$('sideRole').textContent=admin?'Administrator':'Pengurus';$('sideAvatar').textContent=initials(currentUser.nama||'');$('navProgramText').textContent=admin?'Program Kerja':'Program Saya';$('navProposalText').textContent=admin?'Persetujuan Usulan':'Usulan Saya';$('welcomeTitle').textContent=`Selamat datang, ${currentUser.nama||'Pengguna'}`;$('welcomeDesc').textContent=admin?'Pantau perencanaan dan pelaksanaan program kerja organisasi.':'Berikut program yang menjadi tanggung jawab Anda dan status usulan yang diajukan.';populateYears();refreshGoogleLinkStatus();}
+    function setupShell(){
+      const admin=isAdmin();
+      document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('hidden',!admin));
+      document.querySelectorAll('.pengurus-only').forEach(el=>el.classList.toggle('hidden',admin));
+      $('sideName').textContent=currentUser.nama||'Pengguna';
+      $('sideRole').textContent=admin?'Administrator':'Pengurus';
+      $('sideAvatar').textContent=initials(currentUser.nama||'');
+      $('navProgramText').textContent=admin?'Program Kerja':'Program Saya';
+      $('navProposalText').textContent=admin?'Persetujuan Usulan':'Usulan Saya';
+      $('welcomeTitle').textContent=`Selamat datang, ${currentUser.nama||'Pengguna'}`;
+      $('welcomeDesc').textContent=admin?'Pantau perencanaan dan pelaksanaan program kerja organisasi.':'Berikut program yang menjadi tanggung jawab Anda dan status usulan yang diajukan.';
+      $('changePengurusPasswordButton').classList.toggle('hidden',admin||mode!=='firebase');
+      populateYears();refreshGoogleLinkStatus();
+    }
+    $('changePengurusPasswordButton').addEventListener('click',()=>{$('pengurusPasswordForm').reset();openModal('pengurusPasswordModal');});
+    $('pengurusPasswordForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const currentPassword=$('currentPengurusPassword').value;
+      const newPassword=$('newPengurusPassword').value;
+      const confirmPassword=$('confirmPengurusPassword').value;
+      if(newPassword.length<10){toast('Password baru minimal 10 karakter.','error');return;}
+      if(newPassword!==confirmPassword){toast('Konfirmasi password baru tidak sama.','error');return;}
+      const button=$('savePengurusPasswordButton');button.disabled=true;button.textContent='Menyimpan...';
+      try{
+        await apiRequest('/api/pengurus/change-password',{method:'POST',body:{currentPassword,newPassword}});
+        closeModal('pengurusPasswordModal');$('pengurusPasswordForm').reset();toast('Password berhasil diganti.','success');
+      }catch(error){toast(error.message,'error');}
+      finally{button.disabled=false;button.textContent='Simpan Password';}
+    });
     function populateYears(){const years=new Set([nowYear,nowYear+1,...programs.map(p=>Number(p.tahun)),...proposals.map(p=>Number(p.tahun))]);const opts=[...years].filter(Boolean).sort((a,b)=>b-a);if(!opts.includes(Number(selectedYear)))selectedYear=String(opts[0]||nowYear);$('globalYear').innerHTML=opts.map(y=>`<option value="${y}" ${String(y)===String(selectedYear)?'selected':''}>Tahun ${y}</option>`).join('');$('fYear').value=selectedYear;$('pYear').value=selectedYear;}
     $('globalYear').addEventListener('change',e=>{selectedYear=e.target.value;renderAll();});
     function navigate(page){activePage=page;document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.page-section').forEach(s=>s.classList.toggle('active',s.id==='page-'+page));const names={dashboard:['Dashboard','Ringkasan program kerja organisasi'],program:[isAdmin()?'Program Kerja':'Program Saya','Daftar program berdasarkan tahun'],proposals:[isAdmin()?'Persetujuan Usulan':'Usulan Saya','Pengajuan program kerja'],pengurus:['Database Pengurus','Data dan akses pengurus'],reports:['Laporan & Evaluasi','Monitoring program dan anggaran']};$('pageHeading').textContent=names[page][0];$('pageSub').textContent=names[page][1];$('sidebar').classList.remove('mobile-open');$('mobileOverlay').classList.remove('show');renderAll();}
@@ -321,7 +439,51 @@
     function tableHTML(list,withActions=true){if(!list.length)return `<div class="empty"><i data-lucide="inbox"></i><div>Belum ada program pada tahun ${escapeHTML(selectedYear)}.</div></div>`;return `<table><thead><tr><th>Nama program</th><th>Bidang</th><th>Penanggung jawab</th><th>Jadwal</th><th>Status</th><th></th></tr></thead><tbody>${list.map(p=>`<tr><td><div class="program-name">${escapeHTML(p.nama)}</div><div class="program-meta">${escapeHTML(p.frekuensi||'Insidental')} · ${p.tahun||selectedYear}</div></td><td>${escapeHTML(p.bidang||'—')}</td><td>${escapeHTML(p.penanggungJawabNama||'—')}</td><td>${dateText(p.mulai||p.tanggal)}${p.selesai?' – '+dateText(p.selesai):''}</td><td><span class="status ${statusClass(p.status)}">${statusLabel(p.status)}</span></td><td><button class="btn btn-light btn-sm" data-view-program="${escapeHTML(p.id)}">Detail</button>${withActions&&isAdmin()?` <button class="btn btn-light btn-sm" data-edit-program="${escapeHTML(p.id)}">Edit</button>`:''}</td></tr>`).join('')}</tbody></table>`;}
     function renderPrograms(){let list=visiblePrograms();const q=($('programSearch').value||'').toLowerCase();const s=$('programStatusFilter').value;list=list.filter(p=>(!q||[p.nama,p.bidang,p.penanggungJawabNama].join(' ').toLowerCase().includes(q))&&(!s||p.status===s));$('programCountLabel').textContent=`${list.length} program ditemukan pada tahun ${selectedYear}`;$('programTable').innerHTML=tableHTML(list,true);}
     function renderProposals(){let list=visibleProposals();const filter=$('proposalStatusFilter').value;if(filter)list=list.filter(p=>p.status===filter);$('proposalCountLabel').textContent=`${list.length} usulan ditampilkan`;$('proposalListTitle').textContent=isAdmin()?'Usulan yang Masuk':'Riwayat Usulan Saya';$('proposalList').innerHTML=list.length?list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(p=>`<div class="proposal-card"><div class="proposal-info"><div class="program-name">${escapeHTML(p.nama)}</div><div class="program-meta">${escapeHTML(p.bidang||'—')} · ${p.tahun||'—'} · Diajukan ${p.pengurusNama? 'oleh '+escapeHTML(p.pengurusNama):'oleh Anda'}</div>${p.alasanAdmin?`<div class="program-meta" style="margin-top:5px;color:#a66a12">Catatan admin: ${escapeHTML(p.alasanAdmin)}</div>`:''}</div><div class="proposal-side"><span class="status ${statusClass(p.status)}">${statusLabel(p.status)}</span><button class="btn btn-light btn-sm" data-view-proposal="${escapeHTML(p.id)}">Detail</button>${isAdmin()&&['pending','revision'].includes(p.status)?`<button class="btn btn-success btn-sm" data-approve-proposal="${escapeHTML(p.id)}">Setujui</button><button class="btn btn-light btn-sm" data-reject-proposal="${escapeHTML(p.id)}">Tinjau</button>`:''}</div></div>`).join(''):`<div class="empty"><i data-lucide="send"></i><div>Belum ada usulan program.</div></div>`;refreshIcons();}
-    function renderPeople(){const q=($('peopleSearch').value||'').toLowerCase();const list=people.filter(p=>[p.nama,p.bidang,p.jabatan,p.loginName].join(' ').toLowerCase().includes(q));$('peopleCountLabel').textContent=`${list.length} pengurus terdaftar`;$('peopleTable').innerHTML=list.length?`<table><thead><tr><th>Nama pengurus</th><th>Jabatan</th><th>Bidang</th><th>Nama login</th><th>Status</th></tr></thead><tbody>${list.map(p=>`<tr><td><div class="person-row"><div class="avatar">${initials(p.nama)}</div><div><div class="person-main">${escapeHTML(p.nama)}</div><div class="person-sub">ID: ${escapeHTML(p.id)}</div></div></div></td><td>${escapeHTML(p.jabatan||'—')}</td><td>${escapeHTML(p.bidang||'—')}</td><td><span class="nowrap">${escapeHTML(p.loginName||'—')}</span></td><td><span class="status ${p.aktif===false?'s-rejected':'s-approved'}">${p.aktif===false?'Nonaktif':'Aktif'}</span></td></tr>`).join('')}</tbody></table>`:`<div class="empty"><i data-lucide="users"></i><div>Belum ada data pengurus.</div></div>`;}
+    function renderPeople(){
+      const q=($('peopleSearch').value||'').toLowerCase();
+      const list=people.filter(p=>[p.nama,p.bidang,p.jabatan,p.loginName,p.accountLoginName].join(' ').toLowerCase().includes(q));
+      $('peopleCountLabel').textContent=`${list.length} pengurus terdaftar`;
+      $('peopleTable').innerHTML=list.length?`<table><thead><tr><th>Nama pengurus</th><th>Jabatan</th><th>Bidang</th><th>Nama login</th><th>Status akun</th><th>Pengaturan akun</th></tr></thead><tbody>${list.map(p=>{
+        const hasAccount=p.hasLoginAccount===true;
+        const accountActive=p.accountActive!==false;
+        const status=hasAccount?(accountActive?'Aktif':'Nonaktif'):'Belum dibuat';
+        const statusClassName=hasAccount?(accountActive?'s-approved':'s-rejected'):'s-pending';
+        const actions=mode==='demo'?'<span class="small muted">Mode demo</span>':hasAccount
+          ?`<button class="btn btn-light btn-sm" data-account-action="reset" data-login="${escapeHTML(p.accountLoginName||p.loginName||'')}">Reset password</button> <button class="btn btn-light btn-sm" data-account-action="toggle" data-login="${escapeHTML(p.accountLoginName||p.loginName||'')}" data-active="${accountActive?'true':'false'}">${accountActive?'Nonaktifkan':'Aktifkan'}</button>`
+          :`<button class="btn btn-primary btn-sm" data-account-action="create" data-person="${escapeHTML(p.id)}">Buat akun</button>`;
+        return `<tr><td><div class="person-row"><div class="avatar">${initials(p.nama)}</div><div><div class="person-main">${escapeHTML(p.nama)}</div><div class="person-sub">ID: ${escapeHTML(p.id)}</div></div></div></td><td>${escapeHTML(p.jabatan||'—')}</td><td>${escapeHTML(p.bidang||'—')}</td><td><span class="nowrap">${escapeHTML(p.accountLoginName||p.loginName||'—')}</span></td><td><span class="status ${statusClassName}">${status}</span></td><td><div class="filters">${actions}</div></td></tr>`;
+      }).join('')}</tbody></table>`:`<div class="empty"><i data-lucide="users"></i><div>Belum ada data pengurus.</div></div>`;
+      refreshIcons();
+    }
+    async function createAccountForExistingPerson(personId){
+      const person=people.find(p=>p.id===personId);if(!person)return;
+      const loginName=slug(person.loginName||prompt(`Nama login untuk ${person.nama}:`)||'');
+      if(!loginName){toast('Nama login wajib diisi.','error');return;}
+      const password=prompt(`Buat password awal untuk ${person.nama} (minimal 10 karakter):`);
+      if(password===null)return;
+      if(password.length<10){toast('Password awal minimal 10 karakter.','error');return;}
+      try{
+        await adminApiRequest('/api/admin/pengurus-accounts',{method:'POST',body:{action:'createAccount',pengurusId:person.id,loginName,password}});
+        await initData();renderAll();toast('Akun Pengurus berhasil dibuat. Berikan nama login dan password awal kepada yang bersangkutan.','success');
+      }catch(error){toast(error.message,'error');}
+    }
+    async function resetPengurusAccount(loginName){
+      const password=prompt(`Masukkan password awal baru untuk ${loginName} (minimal 10 karakter):`);
+      if(password===null)return;
+      if(password.length<10){toast('Password minimal 10 karakter.','error');return;}
+      try{
+        await adminApiRequest('/api/admin/pengurus-accounts',{method:'POST',body:{action:'resetPassword',loginName,password}});
+        toast('Password akun Pengurus berhasil direset. Sesi lama akun tersebut otomatis berakhir.','success');
+      }catch(error){toast(error.message,'error');}
+    }
+    async function togglePengurusAccount(loginName,currentActive){
+      const next=!currentActive;
+      if(!confirm(`${next?'Aktifkan':'Nonaktifkan'} akun ${loginName}?`))return;
+      try{
+        await adminApiRequest('/api/admin/pengurus-accounts',{method:'POST',body:{action:'setActive',loginName,aktif:next}});
+        await initData();renderAll();toast(`Akun ${loginName} berhasil ${next?'diaktifkan':'dinonaktifkan'}.`,'success');
+      }catch(error){toast(error.message,'error');}
+    }
     function renderReports(){const list=programs.filter(p=>String(p.tahun)===String(selectedYear));const total=list.reduce((a,p)=>a+(Number(p.totalRab)||Number(p.budget)||0),0);$('reportStats').innerHTML=[statCard('Total Program',list.length,'Program resmi tahun '+selectedYear,'clipboard-list'),statCard('Program Selesai',list.filter(p=>p.status==='selesai').length,'Telah direalisasikan','check-circle-2'),statCard('Total RAB',rupiah(total),'Anggaran yang direncanakan','wallet'),statCard('Menunggu Usulan',proposals.filter(p=>p.status==='pending').length,'Usulan perlu diperiksa','send')].join('');$('budgetSummary').innerHTML=`<div style="font:800 25px Manrope;color:#203c5d;margin:10px 0 5px">${rupiah(total)}</div><div class="small muted">Total rencana anggaran seluruh program yang disetujui.</div><div class="progress-track" style="margin-top:18px;height:9px"><div class="progress-fill" style="width:100%"></div></div>`;const fields={};list.forEach(p=>fields[p.bidang||'Lainnya']=(fields[p.bidang||'Lainnya']||0)+1);const max=Math.max(1,...Object.values(fields));$('fieldSummary').innerHTML=Object.entries(fields).length?Object.entries(fields).map(([n,v])=>`<div class="progress-row"><div class="progress-name">${escapeHTML(n)}</div><div class="progress-num">${v}</div><div class="progress-track"><div class="progress-fill" style="width:${v/max*100}%"></div></div></div>`).join(''):'<div class="empty">Belum ada data bidang.</div>';$('reportTable').innerHTML=list.length?`<table><thead><tr><th>Program</th><th>Bidang</th><th>Penanggung jawab</th><th>Status</th><th>Total RAB</th></tr></thead><tbody>${list.map(p=>`<tr><td><div class="program-name">${escapeHTML(p.nama)}</div><div class="program-meta">${p.tahun}</div></td><td>${escapeHTML(p.bidang||'—')}</td><td>${escapeHTML(p.penanggungJawabNama||'—')}</td><td><span class="status ${statusClass(p.status)}">${statusLabel(p.status)}</span></td><td><strong>${rupiah(p.totalRab||p.budget||0)}</strong></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Belum ada program untuk direkap.</div>';}
 
     function openModal(id){$(id).classList.add('show');}function closeModal(id){$(id).classList.remove('show');}document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)));document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
@@ -333,9 +495,51 @@
     $('addProgramBtn').addEventListener('click',()=>openProgramForm());$('quickAddProgram').addEventListener('click',()=>openProgramForm());$('programForm').addEventListener('submit',async e=>{e.preventDefault();const person=people.find(p=>p.id===$('fPerson').value);if(!person){toast('Pilih penanggung jawab program.','error');return;}const rab=[...document.querySelectorAll('.rab-row')].map(r=>({uraian:r.querySelector('[data-rab="uraian"]').value.trim(),volume:Number(r.querySelector('[data-rab="volume"]').value)||0,harga:Number(r.querySelector('[data-rab="harga"]').value)||0})).filter(r=>r.uraian).map(r=>({...r,jumlah:r.volume*r.harga}));const data={tahun:Number($('fYear').value),nama:$('fName').value.trim(),bidang:$('fField').value.trim(),frekuensi:$('fFrequency').value,mulai:$('fStart').value,selesai:$('fEnd').value,penanggungJawabId:person.id,penanggungJawabNama:person.nama,status:$('fStatus').value,tujuan:$('fGoal').value.trim(),latarBelakang:$('fBackground').value.trim(),sasaran:$('fTarget').value.trim(),indikator:$('fIndicator').value.trim(),rab,totalRab:rab.reduce((a,r)=>a+r.jumlah,0),updatedAt:Date.now()};try{const id=$('programId').value;if(mode==='demo'){if(id){const i=programs.findIndex(p=>p.id===id);programs[i]={...programs[i],...data};}else programs.push({id:'prog-'+Date.now(),...data,createdAt:Date.now()});saveDemo();}else{if(id)await db.collection('program_kerja').doc(id).update(data);else await db.collection('program_kerja').add({...data,createdBy:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await initData();}closeModal('programModal');renderAll();toast(id?'Program berhasil diperbarui.':'Program berhasil ditambahkan.','success');}catch(err){toast('Gagal menyimpan program: '+err.message,'error');}});
 
     function openProposalModal(){ $('proposalForm').reset();$('pYear').value=selectedYear;openModal('proposalModal'); }
-    $('newProposalBtn').addEventListener('click',openProposalModal);$('quickPropose').addEventListener('click',openProposalModal);$('proposalForm').addEventListener('submit',async e=>{e.preventDefault();const data={nama:$('pName').value.trim(),tahun:Number($('pYear').value),bidang:$('pField').value.trim(),frequensi:$('pFrequency').value,tanggal:$('pDate').value,deskripsi:$('pDescription').value.trim(),budget:Number($('pBudget').value)||0,penanggungJawab:$('pResponsible').value.trim()||currentUser.nama,pengurusId:isAdmin()?'admin':currentUser.pengurusId,pengurusNama:currentUser.nama,status:'pending',createdAt:Date.now()};try{if(mode==='demo'){proposals.push({id:'proposal-'+Date.now(),...data});saveDemo();}else{await db.collection('usulan_program').add({...data,createdBy:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await initData();}closeModal('proposalModal');renderAll();toast('Usulan berhasil dikirim dan menunggu persetujuan admin.','success');}catch(err){toast('Gagal mengirim usulan: '+err.message,'error');}});
+    $('newProposalBtn').addEventListener('click',openProposalModal);$('quickPropose').addEventListener('click',openProposalModal);
+    $('proposalForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const data={nama:$('pName').value.trim(),tahun:Number($('pYear').value),bidang:$('pField').value.trim(),frekuensi:$('pFrequency').value,tanggal:$('pDate').value,deskripsi:$('pDescription').value.trim(),budget:Number($('pBudget').value)||0,penanggungJawab:$('pResponsible').value.trim()||currentUser.nama};
+      try{
+        if(mode==='demo'){
+          proposals.push({id:'proposal-'+Date.now(),...data,pengurusId:isAdmin()?'admin':currentUser.pengurusId,pengurusNama:currentUser.nama,status:'pending',createdAt:Date.now()});saveDemo();
+        }else if(sessionMode==='pengurus'){
+          await apiRequest('/api/pengurus/proposals',{method:'POST',body:data});await initData();
+        }else{
+          await db.collection('usulan_program').add({...data,pengurusId:'admin',pengurusNama:currentUser.nama,status:'pending',createdBy:currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await initData();
+        }
+        closeModal('proposalModal');renderAll();toast('Usulan berhasil dikirim dan menunggu persetujuan admin.','success');
+      }catch(err){toast('Gagal mengirim usulan: '+err.message,'error');}
+    });
 
-    $('addPersonBtn').addEventListener('click',()=>{$('personForm').reset();openModal('personModal');});$('personForm').addEventListener('submit',async e=>{e.preventDefault();const nama=$('personName').value.trim(),loginName=slug($('personLogin').value);if(people.some(p=>slug(p.loginName)===loginName)){toast('Nama login sudah digunakan.','error');return;}const data={nama,jabatan:$('personPosition').value.trim(),bidang:$('personField').value.trim(),loginName,aktif:true};try{if(mode==='demo'){people.push({id:'person-'+Date.now(),...data});saveDemo();}else{const ref=await db.collection('pengurus').add(data);people.push({id:ref.id,...data});}closeModal('personModal');renderAll();toast('Data pengurus berhasil disimpan. Buat akun Firebase Authentication sesuai nama login tersebut.','success');}catch(err){toast('Gagal menyimpan pengurus: '+err.message,'error');}});
+    $('addPersonBtn').addEventListener('click',()=>{$('personForm').reset();openModal('personModal');});
+    $('personForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const nama=$('personName').value.trim();
+      const loginName=slug($('personLogin').value);
+      const password=$('personPassword').value;
+      if(!nama||!loginName){toast('Nama dan nama login wajib diisi.','error');return;}
+      if(mode==='firebase'&&password.length<10){toast('Password awal minimal 10 karakter.','error');return;}
+      if(people.some(p=>slug(p.loginName)===loginName)){toast('Nama login sudah digunakan pada data pengurus.','error');return;}
+      const data={nama,jabatan:$('personPosition').value.trim(),bidang:$('personField').value.trim(),loginName,aktif:true};
+      try{
+        if(mode==='demo'){
+          people.push({id:'person-'+Date.now(),...data,hasLoginAccount:false});saveDemo();
+        }else{
+          const result=await adminApiRequest('/api/admin/pengurus-accounts',{method:'POST',body:{action:'createPerson',...data,password}});
+          people.push({...result.person,hasLoginAccount:true,accountLoginName:loginName,accountActive:true});
+          await initData();
+        }
+        closeModal('personModal');renderAll();toast('Data dan akun login Pengurus berhasil dibuat. Berikan nama login dan password awal secara pribadi.','success');
+      }catch(err){toast('Gagal menyimpan Pengurus: '+err.message,'error');}
+    });
+
+    document.addEventListener('click',e=>{
+      const action=e.target.closest('[data-account-action]');if(!action)return;
+      const kind=action.dataset.accountAction;
+      if(kind==='create')createAccountForExistingPerson(action.dataset.person);
+      if(kind==='reset')resetPengurusAccount(action.dataset.login);
+      if(kind==='toggle')togglePengurusAccount(action.dataset.login,action.dataset.active==='true');
+    });
 
     function showProgramDetail(p){$('detailTitle').textContent=p.nama;$('detailSub').textContent=`${p.bidang||'Tanpa bidang'} · ${p.tahun||selectedYear}`;const items=[['Penanggung jawab',p.penanggungJawabNama],['Frekuensi',p.frekuensi],['Jadwal',`${dateText(p.mulai||p.tanggal)}${p.selesai?' – '+dateText(p.selesai):''}`],['Status',statusLabel(p.status)],['Sasaran',p.sasaran],['Indikator keberhasilan',p.indikator]];$('detailBody').innerHTML=`<div class="detail-grid">${items.map(([k,v])=>`<div class="detail-item"><div class="k">${k}</div><div class="v">${escapeHTML(v||'—')}</div></div>`).join('')}<div class="detail-block"><div class="detail-item"><div class="k">Tujuan kegiatan</div></div><p>${escapeHTML(p.tujuan||'Belum diisi')}</p></div><div class="detail-block"><div class="detail-item"><div class="k">Latar belakang</div></div><p>${escapeHTML(p.latarBelakang||'Belum diisi')}</p></div><div class="detail-block"><div class="detail-item"><div class="k">Rencana anggaran biaya</div></div>${p.rab?.length?`<table style="min-width:0;margin-top:8px"><thead><tr><th>Uraian</th><th>Volume</th><th>Jumlah</th></tr></thead><tbody>${p.rab.map(r=>`<tr><td>${escapeHTML(r.uraian)}</td><td>${r.volume}</td><td>${rupiah(r.jumlah)}</td></tr>`).join('')}</tbody></table>`:`<p>${rupiah(p.budget||p.totalRab||0)}</p>`}<p><strong>Total: ${rupiah(p.totalRab||p.budget||0)}</strong></p></div></div>`;$('detailActions').innerHTML=`${isAdmin()?`<button class="btn btn-light" id="detailEditBtn">Edit Program</button>`:''}<button class="btn btn-primary" data-close="detailModal">Tutup</button>`;if(isAdmin())$('detailEditBtn').addEventListener('click',()=>{closeModal('detailModal');openProgramForm(p);});openModal('detailModal');refreshIcons();}
     function showProposalDetail(p){$('detailTitle').textContent=p.nama;$('detailSub').textContent=`Usulan dari ${p.pengurusNama||'—'} · ${p.tahun||'—'}`;$('detailBody').innerHTML=`<div class="detail-grid"><div class="detail-item"><div class="k">Bidang</div><div class="v">${escapeHTML(p.bidang||'—')}</div></div><div class="detail-item"><div class="k">Frekuensi</div><div class="v">${escapeHTML(p.frekuensi||'—')}</div></div><div class="detail-item"><div class="k">Tanggal rencana</div><div class="v">${dateText(p.tanggal)}</div></div><div class="detail-item"><div class="k">Perkiraan anggaran</div><div class="v">${rupiah(p.budget||0)}</div></div><div class="detail-item"><div class="k">Usulan penanggung jawab</div><div class="v">${escapeHTML(p.penanggungJawab||'—')}</div></div><div class="detail-item"><div class="k">Status</div><div class="v"><span class="status ${statusClass(p.status)}">${statusLabel(p.status)}</span></div></div><div class="detail-block"><div class="detail-item"><div class="k">Gambaran kegiatan</div></div><p>${escapeHTML(p.deskripsi||'Tidak ada keterangan.')}</p></div>${p.alasanAdmin?`<div class="detail-block"><div class="detail-item"><div class="k">Catatan admin</div></div><p>${escapeHTML(p.alasanAdmin)}</p></div>`:''}</div>`;$('detailActions').innerHTML=`${isAdmin()&&['pending','revision'].includes(p.status)?`<button class="btn btn-light" id="detailReviewBtn">Tinjau usulan</button><button class="btn btn-success" id="detailApproveBtn">Setujui</button>`:''}<button class="btn btn-primary" data-close="detailModal">Tutup</button>`;if(isAdmin()&&['pending','revision'].includes(p.status)){$('detailReviewBtn').addEventListener('click',()=>{closeModal('detailModal');reviewProposal(p);});$('detailApproveBtn').addEventListener('click',()=>{closeModal('detailModal');approveProposal(p);});}openModal('detailModal');}
@@ -351,56 +555,39 @@
       const configured=firebaseConfigured();
       if(configured){
         try{
-          if(!window.firebase) throw new Error('Library Firebase tidak berhasil dimuat. Periksa koneksi internet atau CDN Firebase.');
-          if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-          auth=firebase.auth();
-          db=firebase.firestore();
-          mode='firebase';
-          $('modeText').textContent='FIREBASE AKTIF · DATABASE ONLINE';
+          if(!window.firebase)throw new Error('Library Firebase tidak berhasil dimuat. Periksa koneksi internet atau CDN Firebase.');
+          if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+          auth=firebase.auth();db=firebase.firestore();mode='firebase';
+          $('modeText').textContent='FIREBASE AKTIF · DATA ONLINE';
           $('demoCredentials').classList.add('hidden');
-          $('googleLoginDivider').classList.remove('hidden');
-          $('googleLoginButton').classList.remove('hidden');
-          $('googleLoginNote').classList.remove('hidden');
-        }catch(e){
-          mode='firebase-error';
-          $('modeText').textContent='FIREBASE BELUM SIAP';
-          $('demoCredentials').classList.add('hidden');
-          $('googleLoginDivider').classList.add('hidden');
-          $('googleLoginButton').classList.add('hidden');
-          $('googleLoginNote').classList.add('hidden');
-          $('loginButton').disabled=true;
-          toast('Firebase belum dapat dijalankan: '+e.message,'error');
-          refreshIcons();
-          return;
+          $('googleLoginDivider').classList.remove('hidden');$('googleLoginButton').classList.remove('hidden');$('googleLoginNote').classList.remove('hidden');
+        }catch(error){
+          mode='firebase-error';$('modeText').textContent='FIREBASE BELUM SIAP';
+          $('demoCredentials').classList.add('hidden');$('googleLoginDivider').classList.add('hidden');$('googleLoginButton').classList.add('hidden');$('googleLoginNote').classList.add('hidden');
+          $('loginButton').disabled=true;toast('Firebase belum dapat dijalankan: '+error.message,'error');refreshIcons();return;
         }
       }else{
-        mode='demo';
-        loadDemo();
-        $('googleLoginDivider').classList.add('hidden');
-        $('googleLoginButton').classList.add('hidden');
-        $('googleLoginNote').classList.add('hidden');
+        mode='demo';loadDemo();
+        $('googleLoginDivider').classList.add('hidden');$('googleLoginButton').classList.add('hidden');$('googleLoginNote').classList.add('hidden');
       }
-      // Admin masuk dengan email; pengurus masuk dengan nama login yang
-      // dipetakan ke loginName@akun.programkerja.app.
+      setLoginTab('admin');
       if(mode==='firebase'){
         auth.onAuthStateChanged(async user=>{
-          if(user&&!currentUser){
-            try{
-              currentUser={uid:user.uid};
-              await initData();
-              $('loginScreen').classList.add('hidden');
-              $('appShell').classList.remove('hidden');
-              setupShell();
-              renderAll();
-            }catch(e){
-              currentUser=null;
-              toast(e.message,'error');
-              await auth.signOut();
+          if(user){
+            if(sessionMode==='pengurus')return;
+            if(!currentUser||sessionMode!=='admin'){
+              try{
+                sessionMode='admin';currentUser={uid:user.uid};await initData();showApp();
+              }catch(error){
+                currentUser=null;sessionMode=null;toast(error.message,'error');await auth.signOut().catch(()=>{});
+              }
             }
+          }else{
+            refreshGoogleLinkStatus();
+            if(!sessionMode&&!currentUser)await restorePengurusSession();
           }
-          if(!user)refreshGoogleLinkStatus();
         });
-        auth.getRedirectResult().then(result=>{if(result?.user)refreshGoogleLinkStatus();}).catch(err=>toast(googleAuthErrorMessage(err),'error'));
+        auth.getRedirectResult().then(result=>{if(result?.user)refreshGoogleLinkStatus();}).catch(error=>toast(googleAuthErrorMessage(error),'error'));
       }
       refreshIcons();
     }

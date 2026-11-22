@@ -1,132 +1,149 @@
-PANDUAN SETUP FIREBASE — PROGRAM KERJA CB3
-==========================================
+PANDUAN FIREBASE — PROGRAM KERJA CB3
+====================================
 
-PROJECT FIREBASE
-- Project ID: database-gencita
-- Auth domain: database-gencita.firebaseapp.com
-- Web App sudah dimasukkan ke index.html.
-- Firebase SDK pada index.html menggunakan compat 10.14.1.
-- Halaman memakai Firebase Authentication dan Cloud Firestore.
-- Google Analytics belum digunakan oleh kode aplikasi; measurementId hanya tersimpan di konfigurasi.
+PROJECT
+- Firebase Project ID: database-gencita
+- Domain utama aplikasi: https://www.cb3.web.id
+- Hosting/API utama: Vercel
+- Firebase Authentication: khusus Admin
+- Login Pengurus: internal melalui Vercel API, bukan Firebase Authentication
+- Database: Cloud Firestore (default)
 
-1. AKTIFKAN FIREBASE AUTHENTICATION
------------------------------------
-1. Buka https://console.firebase.google.com/
-2. Pilih project database-gencita.
-3. Buka Build > Authentication.
-4. Klik Get started (jika belum pernah diaktifkan).
-5. Buka Sign-in method.
-6. Pilih Email/Password, aktifkan Email/Password, lalu Save.
-
-2. TAMBAHKAN DOMAIN YANG DIPAKAI
---------------------------------
-1. Di Authentication, buka Settings > Authorized domains.
-2. Tambahkan host berikut satu per satu jika belum ada:
+A. FIREBASE AUTHENTICATION UNTUK ADMIN
+--------------------------------------
+1. Buka Firebase Console > Authentication > Sign-in method.
+2. Aktifkan Email/Password.
+3. Aktifkan Google bila Admin ingin memakai Google Sign-In.
+4. Pada Authentication > Settings > Authorized domains, pastikan host yang digunakan sudah terdaftar:
    - www.cb3.web.id
-   - pages.cb3.web.id
-   - prokercb3.vercel.app
-   - wmyulfian.github.io
-3. Jangan menambahkan https:// atau path; masukkan nama host saja.
-4. Domain database-gencita.firebaseapp.com biasanya sudah terdaftar otomatis.
+   - pages.cb3.web.id (jika menggunakan GitHub Pages)
+   - prokercb3.vercel.app (jika memakai domain Vercel bawaan)
+   - wmyulfian.github.io (opsional, jika mengakses domain GitHub Pages bawaan)
+5. Buat akun Admin di Authentication > Users.
+6. Buat dokumen Firestore users/{UID_ADMIN} dengan field:
+   role | string | admin
+   nama | string | Administrator
 
-Catatan: gunakan domain yang benar-benar dipakai. Jika alamat Vercel berubah, tambahkan hostname Vercel terbaru.
+Catatan: akun Firebase Authentication hanya untuk Admin. Jangan membuat akun Firebase Authentication untuk Pengurus pada arsitektur ini.
 
-3. BUAT CLOUD FIRESTORE
------------------------
-1. Buka Build > Firestore Database.
-2. Klik Create database jika database belum dibuat.
-3. Pilih Production mode.
-4. Pilih lokasi asia-southeast2 (Jakarta) bila database memang belum dibuat.
-5. Selesaikan pembuatan database.
-
-PENTING: Lokasi Firestore tidak dapat diubah setelah database dibuat. Jika database sudah ada, jangan membuat database kedua hanya untuk mengikuti petunjuk ini; periksa lokasi yang sudah dipilih.
-
-4. TERAPKAN FIRESTORE SECURITY RULES
-------------------------------------
-1. Buka Firestore Database > Rules.
-2. Buka file firestore.rules di paket ini.
-3. Salin seluruh isinya ke editor Rules Firebase.
-4. Klik Publish.
-
-Ringkasan aturan:
-- Admin dapat membaca dan mengelola seluruh program, usulan, dan data pengurus.
-- Pengurus hanya dapat membaca program dengan penanggungJawabId yang sama dengan pengurusId pada profilnya.
-- Pengurus hanya dapat membaca usulan miliknya sendiri dan dapat membuat usulan baru.
-- Hanya admin yang dapat menyetujui, merevisi, menolak, atau menghapus usulan.
-- Profil users hanya dapat dibaca oleh pemilik akun; pembuatan profil awal dilakukan melalui Firebase Console.
-
-5. BUAT AKUN ADMIN PERTAMA
---------------------------
-A. Firebase Authentication:
-1. Buka Authentication > Users.
-2. Klik Add user.
-3. Masukkan email admin yang benar-benar Anda miliki dan password yang kuat.
-4. Simpan, lalu salin UID akun yang dibuat.
-
-B. Cloud Firestore:
-1. Buka Firestore Database > Data.
-2. Buat collection dengan ID: users
-3. Buat document dengan Document ID persis sama dengan UID akun admin tadi.
-4. Tambahkan field berikut:
-   role  | string | admin
-   nama  | string | Administrator
-5. Simpan.
-
-Setelah itu, buka website dan login melalui tab Admin menggunakan email dan password tersebut.
-
-6. BUAT AKUN PENGURUS
+B. FIRESTORE DATABASE
 ---------------------
-A. Buat data pengurus melalui website:
-1. Login sebagai admin.
-2. Buka Database Pengurus > Tambah Pengurus.
-3. Masukkan nama, jabatan, bidang, serta nama login unik.
-4. Simpan.
-5. Buka Firestore > collection pengurus dan catat Document ID dari data pengurus yang baru dibuat. ID ini disebut pengurusId.
+Koleksi utama:
+- users/{UID_ADMIN}: profil Admin Firebase Authentication.
+- pengurus/{pengurusId}: data umum Pengurus.
+- program_kerja/{programId}: program resmi.
+- usulan_program/{usulanId}: usulan kegiatan.
+- akun_pengurus/{loginName}: akun login internal Pengurus (password hash dan salt, bukan password asli).
+- _pengurus_login_limits/{hashIp}: penghitung pembatasan percobaan login.
 
-B. Buat akun autentikasi pengurus:
-1. Buka Authentication > Users > Add user.
-2. Gunakan email internal berdasarkan nama login:
-   namalogin@akun.programkerja.app
-   Contoh: ahmad.fauzi@akun.programkerja.app
-3. Buat password sementara yang diberikan secara aman kepada pengurus.
-4. Simpan dan salin UID akun tersebut.
+JANGAN mengisi password asli ke Firestore. Aplikasi menyimpan hasil hash scrypt dan salt di akun_pengurus melalui API server.
 
-C. Buat profil Firestore:
-1. Buka Firestore > collection users.
-2. Buat document dengan Document ID persis sama dengan UID akun pengurus tadi.
-3. Tambahkan field:
-   role        | string | pengurus
-   nama        | string | Nama Pengurus
-   pengurusId  | string | ID dokumen dari collection pengurus
-4. Simpan.
+C. FIREBASE SERVICE ACCOUNT UNTUK VERCEL API
+--------------------------------------------
+Vercel API memerlukan Firebase Admin SDK agar dapat memverifikasi akun Admin serta membuat/mengelola akun internal Pengurus secara aman.
 
-Pengurus login melalui tab Pengurus dengan mengetik nama login (bukan email internal) dan password yang dibuat di Authentication.
+1. Buka Firebase Console > Project settings (ikon roda gigi) > Service accounts.
+2. Pilih Firebase Admin SDK.
+3. Klik Generate new private key dan unduh file JSON.
+4. Simpan file JSON itu secara pribadi di komputer.
+5. JANGAN mengunggah file JSON tersebut ke GitHub, jangan menaruhnya di index.html, dan jangan mengirimkannya melalui chat.
+6. Salin seluruh isi file JSON untuk dimasukkan langsung ke Environment Variable Vercel bernama FIREBASE_SERVICE_ACCOUNT_JSON.
 
-CATATAN PENTING LOGIN PENGURUS
-- Nama login diubah oleh aplikasi menjadi slug huruf kecil dan tanda titik, lalu ditambahkan @akun.programkerja.app.
-- Contoh nama login Ahmad Fauzi: ahmad.fauzi
-- Email internalnya: ahmad.fauzi@akun.programkerja.app
-- Email internal ini hanya identitas login Firebase, bukan alamat email untuk menerima surat.
-- Password tidak disimpan di Firestore.
-- Pembuatan akun Authentication pengurus pada versi awal ini dilakukan melalui Firebase Console, bukan dari browser.
+Kunci Service Account adalah kredensial server yang sangat sensitif. Jika pernah terunggah ke repository publik, segera hapus/nonaktifkan key tersebut dan buat key baru.
 
-7. UJI COBA SEBELUM DIGUNAKAN
+D. ENVIRONMENT VARIABLES DI VERCEL
+-----------------------------------
+Buka Vercel Dashboard > project Prokercb3 > Settings > Environment Variables.
+Tambahkan variabel berikut untuk Production:
+
+1. Name: FIREBASE_SERVICE_ACCOUNT_JSON
+   Value: seluruh isi JSON Service Account yang diunduh pada bagian C.
+
+2. Name: PENGURUS_SESSION_SECRET
+   Value: secret acak minimal 48 karakter. Cara membuat dengan Node.js:
+   node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'))"
+   Jangan gunakan contoh secret publik dan jangan mengirim nilai ini kepada siapa pun.
+
+3. ALLOWED_APP_ORIGINS (opsional)
+   Value: https://www.cb3.web.id,https://pages.cb3.web.id,https://prokercb3.vercel.app
+   Origin utama sudah diizinkan di kode; variabel ini hanya untuk origin tambahan.
+
+Pilih Environment Production. Preview dapat ditambahkan jika memang ingin menguji API di deployment preview. Setelah menyimpan atau mengubah Environment Variables, lakukan redeploy karena perubahan tidak berlaku pada deployment yang sudah berjalan.
+
+E. NODE.JS DI VERCEL
+--------------------
+1. Vercel Dashboard > project Prokercb3 > Settings > General / Build & Development Settings.
+2. Pilih Node.js Version: 22.x.
+3. Simpan lalu deploy ulang.
+
+Firebase Admin Node.js SDK versi yang digunakan membutuhkan Node.js 22 atau lebih baru. package.json paket ini membatasi ke Node 22 agar konsisten.
+
+F. UPLOAD FILE KE GITHUB DAN DEPLOY
+-----------------------------------
+Unggah/ganti file berikut ke root repository wmyulfian/Prokercb3:
+- index.html
+- firestore.rules
+- vercel.json
+- package.json
+- .gitignore
+- .env.example
+- README.md
+- PETUNJUK-FIREBASE.txt
+- PETUNJUK-LOGIN-INTERNAL-PENGURUS.md
+- folder api/
+- folder lib/
+
+Pastikan api/ dan lib/ tetap menjadi folder di root repository, bukan isi file yang dipindah ke index.html.
+
+Jangan unggah file backup index.before-internal-login.html, file JSON Service Account, .env berisi secret, atau node_modules.
+
+Vercel akan menginstal firebase-admin dari package.json dan membangun API routes di folder api/.
+
+G. URUTAN PENERAPAN YANG AMAN
 -----------------------------
-1. Login admin, pastikan dashboard memuat tanpa error permission.
-2. Buat satu data pengurus melalui menu Database Pengurus.
-3. Buat akun Authentication pengurus dan dokumen users sesuai langkah 6.
-4. Buat satu program yang ditugaskan kepada pengurus tersebut.
-5. Logout admin dan login sebagai pengurus.
-6. Pastikan pengurus hanya melihat program yang menjadi tanggung jawabnya.
-7. Coba kirim usulan program dari akun pengurus.
-8. Login kembali sebagai admin dan uji persetujuan/revisi/penolakan usulan.
-9. Ulangi dengan dua akun pengurus berbeda untuk memeriksa pemisahan akses.
+1. Upload semua file baru ke GitHub.
+2. Di Vercel pilih Node.js 22.x.
+3. Tambahkan FIREBASE_SERVICE_ACCOUNT_JSON dan PENGURUS_SESSION_SECRET pada Environment Variables.
+4. Redeploy proyek Vercel.
+5. Uji Admin login dan pastikan dashboard Admin masih terbuka.
+6. Baru buka Firestore > Rules, ganti seluruh aturan lama dengan isi firestore.rules terbaru, lalu Publish.
+7. Uji Admin sekali lagi.
+8. Admin membuat satu akun Pengurus dari menu Database Pengurus.
+9. Uji login Pengurus, pembatasan program, usulan, dan ganti password.
 
-BATASAN VERSI SAAT INI
-----------------------
-- Versi ini menghubungkan Firebase Authentication dan Cloud Firestore.
-- Pembuatan akun pengurus masih manual melalui Firebase Console.
-- Upload foto/dokumen bukti kegiatan dan realisasi anggaran rinci belum diaktifkan.
-- Fitur laporan yang mengizinkan pengurus mengubah program resmi belum tersedia; aturan saat ini membuat perubahan program resmi hanya dapat dilakukan admin.
-- Jangan pernah mengunggah Service Account JSON atau private key ke GitHub atau ke index.html.
-- Firebase Web API key dalam konfigurasi frontend bukan pengganti keamanan. Keamanan data bergantung pada Authentication dan Firestore Security Rules.
+H. MEMBUAT AKUN PENGURUS
+------------------------
+Pengurus TIDAK dibuat di Firebase Authentication dan TIDAK membutuhkan dokumen users/{UID}.
+
+Untuk Pengurus baru:
+1. Admin login menggunakan Firebase Authentication.
+2. Buka Database Pengurus > Tambah Pengurus.
+3. Isi nama, jabatan, bidang, nama login unik, dan password awal minimal 10 karakter.
+4. Klik Simpan Pengurus.
+5. Vercel API membuat dokumen pengurus/{pengurusId} dan akun_pengurus/{loginName} secara bersamaan.
+6. Admin menyampaikan nama login dan password awal kepada Pengurus secara pribadi.
+
+Untuk data Pengurus lama yang sudah ada tanpa akun internal:
+1. Di tabel Database Pengurus klik tombol Buat akun.
+2. Masukkan nama login dan password awal minimal 10 karakter.
+3. API akan menghubungkan akun dengan dokumen Pengurus lama.
+
+Pengurus login dengan tab Pengurus menggunakan nama login dan password. Google Sign-In hanya untuk Admin.
+
+I. GANTI PASSWORD DAN PENGELOLAAN AKUN
+--------------------------------------
+- Pengurus dapat masuk ke menu Ganti password di sidebar, mengisi password saat ini dan password baru (minimal 10 karakter).
+- Admin dapat Reset password dari Database Pengurus.
+- Admin dapat mengaktifkan atau menonaktifkan akun. Penonaktifan mencabut sesi aktif.
+- Sesi Pengurus menggunakan cookie HttpOnly Secure dan masa berlaku 8 jam.
+
+J. BATASAN DAN PERINGATAN
+-------------------------
+- Admin tetap membaca/menulis data organisasi langsung melalui Firebase Web SDK; Firestore Rules memeriksa users/{UID_ADMIN}.role == admin.
+- Browser Pengurus tidak membaca Firestore secara langsung. Seluruh data Pengurus diambil melalui Vercel API yang memverifikasi cookie sesi.
+- Pengurus hanya menerima program dengan penanggungJawabId yang cocok dengan pengurusId akun tersebut, serta usulan miliknya sendiri.
+- Admin SDK melewati Firestore Security Rules. Karena itu endpoint API melakukan verifikasi Admin/sesi sebelum mengakses database.
+- Jangan pernah memakai aturan terbuka seperti allow read, write: if true.
+- Jangan pernah menyimpan password asli. Simpan hanya hash + salt di akun_pengurus.
+- Jangan membagikan Service Account JSON atau PENGURUS_SESSION_SECRET.
+- GitHub Pages hanya hosting statis alternatif. API autentikasi Pengurus tetap berjalan di Vercel melalui https://www.cb3.web.id.

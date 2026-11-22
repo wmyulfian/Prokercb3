@@ -5,56 +5,46 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function myProfile() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
-    }
-
     function isAdmin() {
-      return signedIn() && myProfile().role == 'admin';
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    function isPengurus() {
-      return signedIn() && myProfile().role == 'pengurus';
-    }
-
-    function myPengurusId() {
-      return myProfile().pengurusId;
-    }
-
+    // Profil Firebase Auth hanya boleh dibaca pemiliknya.
+    // Pembuatan/perubahan profil Admin dilakukan secara manual atau melalui server tepercaya.
     match /users/{uid} {
-      // Profil hanya dapat dibaca oleh pemilik akun.
-      // Buat/perbarui profil awal melalui Firebase Console atau Admin SDK.
       allow get: if signedIn() && request.auth.uid == uid;
       allow list, create, update, delete: if false;
     }
 
+    // Semua akses dari browser untuk data organisasi hanya milik Admin.
+    // Pengurus memakai Vercel API yang memvalidasi sesi internal, lalu mengakses
+    // Firestore melalui Firebase Admin SDK di server.
     match /pengurus/{pengurusId} {
-      allow get: if isAdmin() || (isPengurus() && myPengurusId() == pengurusId);
-      allow list: if isAdmin();
-      allow create, update, delete: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
     match /program_kerja/{programId} {
-      // Query pengurus harus dibatasi dengan penanggungJawabId == users/{uid}.pengurusId.
-      allow get, list: if isAdmin() ||
-        (isPengurus() && resource.data.penanggungJawabId == myPengurusId());
-      allow create, update, delete: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
     match /usulan_program/{usulanId} {
-      // Pengurus hanya dapat membaca usulannya sendiri.
-      allow get, list: if isAdmin() ||
-        (isPengurus() && resource.data.pengurusId == myPengurusId());
+      allow read, write: if isAdmin();
+    }
 
-      allow create: if isAdmin() || (
-        isPengurus() &&
-        request.resource.data.pengurusId == myPengurusId() &&
-        request.resource.data.createdBy == request.auth.uid &&
-        request.resource.data.status == 'pending'
-      );
+    // Hash password, salt, sesi, dan pembatasan percobaan login tidak boleh
+    // pernah dibaca atau ditulis langsung dari browser.
+    match /akun_pengurus/{loginName} {
+      allow read, write: if false;
+    }
 
-      // Keputusan persetujuan, revisi, atau penolakan hanya oleh admin.
-      allow update, delete: if isAdmin();
+    match /_pengurus_login_limits/{limitId} {
+      allow read, write: if false;
+    }
+
+    // Tolak secara default seluruh koleksi yang belum diatur secara eksplisit.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
